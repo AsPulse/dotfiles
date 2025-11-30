@@ -1,6 +1,9 @@
 local opt = vim.opt
 
-opt.smartindent = true
+opt.smartindent = false
+opt.autoindent = false
+opt.cindent = false
+
 opt.tabstop = 2
 opt.shiftwidth = 2
 opt.expandtab = true
