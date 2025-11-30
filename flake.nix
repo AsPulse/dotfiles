@@ -30,18 +30,33 @@
 
 			formatter = pkgs.writeShellApplication {
 				name = "aspulse-dotfiles-formatter";
-				runtimeInputs = [ pkgs.stylua ];
+				runtimeInputs = with pkgs; [ stylua nixfmt-rfc-style fd ];
 				text = ''
 					stylua --glob '**/*.lua' neovim
+					fd "$@" -t f -e nix -x nixfmt '{}'
 				'';
 			};
 
 			checks.formatting-neovim = pkgs.runCommand "check-neovim-formatting" {
-				buildInputs = [ pkgs.stylua ];
+				buildInputs = with pkgs; [ stylua ];
 				src = self;
 			} ''
 				cd $src
 				stylua --check --glob '**/*.lua' neovim
+				touch $out
+			'';
+
+			checks.formatting-nix = pkgs.runCommand "check-nix-formatting" {
+				buildInputs = with pkgs; [ nixfmt-rfc-style fd gitMinimal ];
+				src = self;
+			} ''
+				cp -r --no-preserve=mode $src src
+				cd src
+				git init --quiet && git add .
+				fd "$@" -t f -e nix -x nixfmt '{}'
+				if ! git diff --exit-code; then
+					exit 1
+				fi
 				touch $out
 			'';
 
