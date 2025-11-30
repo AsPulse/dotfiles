@@ -12,7 +12,14 @@ return {
     },
     indent = { enabled = true },
     explorer = {},
-    picker = { enabled = true },
+    picker = {
+      enabled = true,
+      sources = {
+        explorer = {
+          auto_close = true,
+        },
+      },
+    },
   },
   keys = {
     --- Explorer
