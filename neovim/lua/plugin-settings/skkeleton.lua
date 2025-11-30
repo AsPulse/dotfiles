@@ -3,7 +3,6 @@ return {
   {
     'vim-skk/skkeleton',
     event = { 'InsertEnter', 'CmdlineEnter' },
-    cmd = { 'Telescope' },
     dependencies = { 'vim-denops/denops.vim', 'yuki-yano/denops-lazy.nvim' },
     config = function()
       require('denops-lazy').load('skkeleton', { wait_load = false })
@@ -33,7 +32,6 @@ return {
   {
     'delphinus/skkeleton_indicator.nvim',
     event = { 'InsertEnter', 'CmdlineEnter' },
-    cmd = { 'Telescope' },
     opts = {},
   },
 }
