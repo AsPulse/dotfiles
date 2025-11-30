@@ -1,4 +1,5 @@
-{ stdenv, lib, ... }: stdenv.mkDerivation  {
+{ stdenv, lib, ... }:
+stdenv.mkDerivation {
   pname = "pinentry-touchid";
   version = "v0.0.3";
 
@@ -14,7 +15,7 @@
     tar -zxvf $src -C $out/bin pinentry-touchid
     chmod a+x $out/bin/pinentry-touchid
   '';
-  
+
   meta = with lib; {
     description = "Custom GPG pinentry program for macOS that allows using Touch ID";
     homepage = "https://github.com/jorgelbg/pinentry-touchid";

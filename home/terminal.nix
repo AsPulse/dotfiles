@@ -1,6 +1,7 @@
-{ pkgs,  ... }: {
+{ pkgs, ... }:
+{
 
-  home.packages =  with pkgs; [
+  home.packages = with pkgs; [
     ghostty-bin
     zellij
   ];
@@ -41,7 +42,7 @@
       zle -N edit-command-line
       bindkey -e
       bindkey '^Xe' edit-command-line
-   '';
+    '';
   };
 
   programs.starship = {

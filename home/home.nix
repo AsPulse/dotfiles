@@ -1,4 +1,5 @@
-{ pkgs, codex-nix, ... }: {
+{ pkgs, codex-nix, ... }:
+{
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
 
@@ -37,7 +38,6 @@
     codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
-
   imports = [
     ./terminal.nix
     ./git.nix
@@ -59,7 +59,6 @@
   home.sessionPath = [
     "$HOME/.krew/bin"
   ];
-
 
   home.sessionVariables = {
     EDITOR = "nvim";
