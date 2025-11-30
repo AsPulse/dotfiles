@@ -21,7 +21,7 @@ vim.keymap.set('n', '<leader>lazy', '<cmd>Lazy<cr>', { noremap = true })
 -- Setup Plugins
 local pluginSettings = required.under('plugin-settings')
 require('lazy').setup(pluginSettings, {
-  lockfile = '~/dotfiles/neovim/lazy-lock.json',
+  lockfile = '~/dotfiles/public/neovim/lazy-lock.json',
   ui = {
     border = 'rounded',
   },
