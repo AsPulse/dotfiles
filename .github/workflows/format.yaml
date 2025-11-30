@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@v21
+        with:
+          determinate: false
       - uses: DeterminateSystems/magic-nix-cache-action@v13
         with: 
           use-flakehub: false
@@ -26,6 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@v21
+        with:
+          determinate: false
       - uses: DeterminateSystems/magic-nix-cache-action@v13
         with: 
           use-flakehub: false
