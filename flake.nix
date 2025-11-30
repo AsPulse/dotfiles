@@ -2,40 +2,35 @@
   description = "AsPulse's public dotfiles";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+		nixpkgs-module.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     codex-nix.url = "github:sadjow/codex-nix";
     lazygit.url = "github:jesseduffield/lazygit";
+		flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, neovim-nightly-overlay, lazygit, codex-nix, ... }: let
-    systems = [ "aarch64-darwin" ];
+  outputs = { nixpkgs-module, flake-utils, neovim-nightly-overlay, lazygit, codex-nix, ... }: let
     overlays = [
       neovim-nightly-overlay.overlays.default
-        lazygit.overlays.default
+			lazygit.overlays.default
     ];
 
-    pkgs = system: import nixpkgs {
-      inherit system overlays;
-      config = {
-        allowUnfree = true;
-      };
-    };
-  in {
+		in flake-utils.lib.eachDefaultSystem (system: let
+				pkgs-module = import nixpkgs-module {
+					inherit system overlays;
+					config.allowUnfree = true;
+				};
+			in {
 
-    desktopModules = nixpkgs.lib.genAttrs systems (system: { ... }@args:
-        import ./desktop/configuration.nix (args // {
-            pkgs = pkgs system;
-          })
-        );
+				desktopModules = { ... }@args:
+					import ./desktop/configuration.nix (args // {
+						pkgs = pkgs-module;
+					});
 
-
-    homeModules = nixpkgs.lib.genAttrs systems (system: { ... }@args:
-        import ./home/home.nix (args // {
-            pkgs = pkgs system;
-            inherit codex-nix;
-          })
-        );
-
-  };
+				homeModules = { ... }@args:
+					import ./home/home.nix (args // {
+						pkgs = pkgs-module;
+						inherit codex-nix;
+					});
+			});
 }
