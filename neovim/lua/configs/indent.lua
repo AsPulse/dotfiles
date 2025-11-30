@@ -5,6 +5,6 @@ opt.tabstop = 2
 opt.shiftwidth = 2
 
 opt.breakindent = true
-opt.breakindentopt = "shift:2,sbr"
+opt.breakindentopt = 'shift:2,sbr'
 
 return nil

@@ -8,7 +8,5 @@ return {
   },
   event = { 'InsertEnter' },
   cmd = { 'TSnip' },
-  config = function()
-    require('denops-lazy').load('tsnip.nvim', { wait_load = false })
-  end,
+  config = function() require('denops-lazy').load('tsnip.nvim', { wait_load = false }) end,
 }

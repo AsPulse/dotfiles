@@ -10,12 +10,9 @@ function export.under(path)
   local fd = vim.loop.fs_scandir(vim.fn.stdpath('config') .. '/lua/' .. path)
   if not fd then return results end
   for name in function() return vim.loop.fs_scandir_next(fd) end do
-    if name:sub(-4) == '.lua' then
-      table.insert(results, export.load(path .. '.' .. name:gsub('.lua\z', '')))
-    end
+    if name:sub(-4) == '.lua' then table.insert(results, export.load(path .. '.' .. name:gsub('.lua\z', ''))) end
   end
   return results
 end
-
 
 return export

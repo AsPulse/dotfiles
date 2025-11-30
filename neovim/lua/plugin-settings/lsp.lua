@@ -23,31 +23,31 @@ return {
                 else
                   print('rustfmt not found')
                 end
-              end
+              end,
             })
           end,
           default_settings = {
-            ["rust-analyzer"] = {
+            ['rust-analyzer'] = {
               check = {
-                command = 'clippy'
+                command = 'clippy',
               },
               lens = {
-                enable = true
+                enable = true,
               },
               assist = {
-                importGranularity = "module",
-                importPrefix = "self",
+                importGranularity = 'module',
+                importPrefix = 'self',
               },
               cargo = {
-                loadOutDirsFromCheck = true
+                loadOutDirsFromCheck = true,
               },
               procMacro = {
-                enable = true
+                enable = true,
               },
               checkOnSave = true,
-            }
+            },
           },
-        }
+        },
       }
     end,
   },
@@ -83,8 +83,8 @@ return {
               onSave = true,
               forwardSearchAfter = false,
             },
-          }
-        }
+          },
+        },
       }
 
       vim.lsp.enable('texlab')
@@ -104,8 +104,8 @@ return {
         single_file_support = false,
         init_options = {
           lint = true,
-          unstable = true
-        }
+          unstable = true,
+        },
       }
 
       vim.lsp.enable('denols')
@@ -121,13 +121,13 @@ return {
         settings = {
           Lua = {
             runtime = {
-              version = "LuaJIT",
+              version = 'LuaJIT',
               pathStrict = true,
-              path = { "?.lua", "?/init.lua" },
+              path = { '?.lua', '?/init.lua' },
             },
             workspace = {
-              library = vim.api.nvim_get_runtime_file("lua", true),
-              checkThirdParty = "Disable",
+              library = vim.api.nvim_get_runtime_file('lua', true),
+              checkThirdParty = 'Disable',
             },
           },
         },
@@ -138,19 +138,19 @@ return {
       vim.api.nvim_create_autocmd('User', {
         pattern = 'LazyLoad',
         callback = function()
-          vim.lsp.config['lua_ls'].settings.Lua.workspace.library = vim.api.nvim_get_runtime_file("lua", true)
-        end
+          vim.lsp.config['lua_ls'].settings.Lua.workspace.library = vim.api.nvim_get_runtime_file('lua', true)
+        end,
       })
 
       -- jsonls
       vim.lsp.config['jsonls'] = {
-        filetypes = { "json", "jsonc", "jsonl", "json5" },
+        filetypes = { 'json', 'jsonc', 'jsonl', 'json5' },
         settings = {
           json = {
-          schemas = require('schemastore').json.schemas(),
+            schemas = require('schemastore').json.schemas(),
             validate = { enable = true },
-          }
-        }
+          },
+        },
       }
 
       vim.lsp.enable('jsonls')
@@ -161,11 +161,11 @@ return {
           yaml = {
             schemaStore = {
               enable = false,
-              url = "",
+              url = '',
             },
             schemas = require('schemastore').yaml.schemas(),
-          }
-        }
+          },
+        },
       }
 
       vim.lsp.enable('yamlls')
@@ -180,8 +180,8 @@ return {
               strict = true,
               catalog = {
                 paths = {
-                  "tombi://json.schemastore.org/api/json/catalog.json",
-                  "https://json.schemastore.org/api/json/catalog.json",
+                  'tombi://json.schemastore.org/api/json/catalog.json',
+                  'https://json.schemastore.org/api/json/catalog.json',
                 },
               },
             },
@@ -193,7 +193,7 @@ return {
 
       -- bash-language-server
       vim.lsp.config['bashls'] = {
-        filetypes = { 'sh', 'zsh' }
+        filetypes = { 'sh', 'zsh' },
       }
 
       vim.lsp.enable('bashls')
@@ -209,9 +209,9 @@ return {
           python = {
             analysis = {
               autoSearchPaths = true,
-              diagnosticMode = "workspace",
+              diagnosticMode = 'workspace',
               useLibraryCodeForTypes = true,
-              typeCheckingMode = "standard",
+              typeCheckingMode = 'standard',
             },
           },
         },
@@ -226,41 +226,40 @@ return {
         callback = function(event)
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client == nil then
-            print('No client found on LspAttach. (lsp.lua)');
+            print('No client found on LspAttach. (lsp.lua)')
             return
           end
-          if client.server_capabilities.documentSymbolProvider then
-            navic.attach(client, event.buf)
-          end
+          if client.server_capabilities.documentSymbolProvider then navic.attach(client, event.buf) end
           local bufopts = { noremap = true, silent = true, buffer = event.buf }
           vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, bufopts)
           vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
-        end
+        end,
       })
 
       local signs = {
-        [vim.diagnostic.severity.ERROR] = " ",
-        [vim.diagnostic.severity.WARN] = " ",
-        [vim.diagnostic.severity.HINT] = "",
-        [vim.diagnostic.severity.INFO] = " ",
-      };
-
+        [vim.diagnostic.severity.ERROR] = ' ',
+        [vim.diagnostic.severity.WARN] = ' ',
+        [vim.diagnostic.severity.HINT] = '',
+        [vim.diagnostic.severity.INFO] = ' ',
+      }
 
       vim.diagnostic.config({
         virtual_lines = {
-          format = function (diagnostic)
+          format = function(diagnostic)
             return string.format(
-              "%s %s (%s: %s)",
-              signs[diagnostic.severity] or "●", diagnostic.message, diagnostic.source, diagnostic.code
+              '%s %s (%s: %s)',
+              signs[diagnostic.severity] or '●',
+              diagnostic.message,
+              diagnostic.source,
+              diagnostic.code
             )
-          end
+          end,
         },
         signs = { text = signs },
       })
-
-    end
+    end,
   },
   {
     'nvimdev/lspsaga.nvim',
@@ -270,21 +269,21 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'nvim-tree/nvim-web-devicons',
     },
-    config = function ()
+    config = function()
       require('lspsaga').setup({
         ui = {
           border = 'rounded',
-        }
+        },
       })
       vim.keymap.set('n', '<leader>rn', function() vim.api.nvim_command('Lspsaga rename') end, {})
       vim.keymap.set('n', '<leader>ac', function() vim.api.nvim_command('Lspsaga code_action') end, {})
       vim.keymap.set('n', 'K', function() vim.api.nvim_command('Lspsaga hover_doc') end, {})
-    end
+    end,
   },
   {
     'stevearc/dressing.nvim',
     event = 'BufEnter *.*',
-    opts = { },
+    opts = {},
   },
   {
     'folke/lsp-colors.nvim',
@@ -293,8 +292,6 @@ return {
   {
     'MysticalDevil/inlay-hints.nvim',
     event = 'LspAttach',
-    config = function()
-        require("inlay-hints").setup()
-    end
-  }
+    config = function() require('inlay-hints').setup() end,
+  },
 }

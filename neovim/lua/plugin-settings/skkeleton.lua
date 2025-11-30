@@ -26,14 +26,14 @@ return {
           return 'l'
         end
       end, { expr = true, remap = true })
-      vim.fn['skkeleton#register_keymap']('henkan', 'q', 'katakana');
-      vim.fn['skkeleton#register_keymap']('henkan', '<C-q>', 'hankatakana');
-    end
+      vim.fn['skkeleton#register_keymap']('henkan', 'q', 'katakana')
+      vim.fn['skkeleton#register_keymap']('henkan', '<C-q>', 'hankatakana')
+    end,
   },
   {
     'delphinus/skkeleton_indicator.nvim',
     event = { 'InsertEnter', 'CmdlineEnter' },
     cmd = { 'Telescope' },
-    opts = { },
-  }
+    opts = {},
+  },
 }

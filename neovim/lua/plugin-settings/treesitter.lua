@@ -11,24 +11,37 @@ return {
       },
       {
         'nvim-treesitter/nvim-treesitter-context',
-        opts = { },
+        opts = {},
       },
     },
     config = function()
-      require('nvim-treesitter.configs').setup {
+      require('nvim-treesitter.configs').setup({
         sync_install = false,
         auto_install = false,
         ignore_install = {},
         modules = {},
         ensure_installed = {
-          'typescript', 'tsx', 'jsdoc',
+          'typescript',
+          'tsx',
+          'jsdoc',
           'diff',
           'dockerfile',
-          'git_rebase', 'gitattributes', 'gitcommit', 'gitignore',
-          'rust', "c_sharp",
+          'git_rebase',
+          'gitattributes',
+          'gitcommit',
+          'gitignore',
+          'rust',
+          'c_sharp',
           'python',
-          'gdscript', 'godot_resource',
-          'html', 'json5', 'lua', 'markdown', 'markdown_inline', 'yaml', 'toml',
+          'gdscript',
+          'godot_resource',
+          'html',
+          'json5',
+          'lua',
+          'markdown',
+          'markdown_inline',
+          'yaml',
+          'toml',
           'cpp',
           'helm',
         },
@@ -40,24 +53,24 @@ return {
 
           default_lazy = true,
 
-          default_fallback = 'auto'
+          default_fallback = 'auto',
         },
-      }
+      })
       vim.filetype.add({
         extension = {
           gotmpl = 'gotmpl',
         },
         pattern = {
-          [".*/templates/.*%.tpl"] = "helm",
-          [".*/templates/.*%.ya?ml"] = "helm",
-          ["helmfile.*%.ya?ml"] = "helm",
+          ['.*/templates/.*%.tpl'] = 'helm',
+          ['.*/templates/.*%.ya?ml'] = 'helm',
+          ['helmfile.*%.ya?ml'] = 'helm',
         },
       })
-    end
+    end,
   },
   {
     'norcalli/nvim-colorizer.lua',
     event = { 'BufAdd *.*', 'VeryLazy' },
-    opts = { },
+    opts = {},
   },
 }

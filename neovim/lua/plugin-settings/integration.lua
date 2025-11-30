@@ -2,12 +2,12 @@
 return {
   {
     'wakatime/vim-wakatime',
-    event = 'VeryLazy'
+    event = 'VeryLazy',
   },
   {
     'Allianaab2m/vimskey',
     event = 'VeryLazy',
-    dependencies = { 'vim-denops/denops.vim' }
+    dependencies = { 'vim-denops/denops.vim' },
   },
   {
     'AsPulse/presence.nvim',
