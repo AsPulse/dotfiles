@@ -1,0 +1,26 @@
+layout {
+  pane size=1 borderless=true {
+      plugin location="zellij:compact-bar"
+  }
+  pane split_direction="vertical" {
+    pane {
+      command "nvim"
+    }
+    pane split_direction="horizontal" size=75 {
+        pane {
+          command "claude"
+        }
+        pane {
+          name "Claude Code Input"
+          size 7
+          cwd "~/"
+          command "nvim"
+          args "-c" "enew | only" 
+        }
+      
+    }
+  }
+  pane size=1 borderless=true {
+      plugin location="zellij:status-bar"
+  }
+}

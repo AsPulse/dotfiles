@@ -1,0 +1,80 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](fg:accent)\
+$os\
+[](fg:accent bg:kubernetes)\
+$kubernetes\
+[](fg:kubernetes bg:nix_bg)\
+$nix_shell\
+[](fg:nix_bg bg:panel)\
+$directory\
+$git_branch\
+[](fg:panel)\
+$fill\
+\n$character\
+"""
+
+right_format = """
+$cmd_duration
+"""
+
+palette = "aspulse"
+
+[os]
+format = "[$symbol]($style)"
+style  = "fg:panel bg:accent"
+disabled = false
+
+[os.symbols]
+Macos  = "  "
+Ubuntu = "  "
+Debian = "  "
+
+[directory]
+truncation_length = 6
+truncation_symbol = " "
+truncate_to_repo = false
+home_symbol = " ~"
+style = "fg:text bg:panel"
+read_only = " 󰌾 "
+read_only_style = "fg:text bg:panel"
+format = "[ ]($style)[$path]($style)[$read_only]($read_only_style)[ ]($style)"
+
+[git_branch]
+symbol = ' ' # nf-fa-code_fork
+truncation_length = 4
+truncation_symbol = ''
+style = 'fg:text bg:panel'
+format = '[ $symbol$branch(:$remote_branch) ]($style)' # nf-pl-left_soft_divider
+
+[fill]
+symbol = "─"
+style  = "fg:line"
+
+[kubernetes]
+disabled = false
+format = '[  $context ](bg:kubernetes fg:#ffffff)'
+
+[nix_shell]
+disabled = false
+symbol = ' '
+style = 'fg:nix_fg bg:nix_bg'
+format = '[ $symbol$state( \($name\)) ]($style)'
+
+
+[cmd_duration]
+min_time = 100
+show_milliseconds = true
+style = 'fg:#e0af68'
+format = "[   $duration]($style)" # nf-pl-right_soft_divider, nf-mdi-clock
+
+[palettes.aspulse]
+accent = "#fa4362"
+panel  = "#261a1d"
+text   = "#f0677e"
+line   = "#cf576b"
+kubernetes = "#326ce5"
+nix_bg = "#76b4de"
+nix_fg = "#1c2f5d"
+

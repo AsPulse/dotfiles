@@ -1,0 +1,45 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{aspulse_wordcount_v1}[2025/04/16 Word Count Package]
+
+% 必要なパッケージを読み込む
+\RequirePackage{xstring}
+\RequirePackage{etoolbox}
+
+% 単語数カウント用の変数を定義
+\newcounter{wordcount}
+
+% 単語数をカウントするコマンドを定義
+\newcommand{\wordcount}[1]{%
+  % カウンタをリセット
+  \setcounter{wordcount}{0}%
+  % 文字列を処理
+  \expandafter\wordcount@process\expandafter{#1}%
+  % 結果を出力
+  \thewordcount%
+}
+
+% 文字列を空白で分割して単語数をカウントする内部コマンド
+\newcommand{\wordcount@process}[1]{%
+  % 空文字列の場合は何もしない
+  \ifblank{#1}{}{%
+    % 文字列の先頭に空白があるかチェック
+    \StrGobbleLeft{#1}{1}[\firstchar]%
+    \IfBeginWith{#1}{ }{%
+      % 先頭が空白なら、それを削除して再帰的に処理
+      \wordcount@process{\firstchar}%
+    }{%
+      % 空白で分割
+      \StrPosition{#1}{ }[\spacepos]%
+      \ifnum\spacepos=0\relax%
+        % 空白がなければ、これは最後の単語
+        \stepcounter{wordcount}%
+      \else%
+        % 空白があれば、その前までを1単語としてカウント
+        \stepcounter{wordcount}%
+        % 残りの文字列を再帰的に処理
+        \StrGobbleLeft{#1}{\spacepos}[\remainder]%
+        \wordcount@process{\remainder}%
+      \fi%
+    }%
+  }%
+}

@@ -1,0 +1,27 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{aspulse_rmdiff}[2025/04/14 Differential notation package]
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{xparse}
+
+\NewDocumentCommand{\diff}{ O{} m g }{%
+    \IfNoValueTF{#3}{% 引数が1つ (\diff[n]{t})
+        \IfNoValueTF{#1}{% n なし (\diff{t})
+            \frac{\mathrm{d}}{\mathrm{d}#2}%
+        }{% n あり (\diff[n]{t})
+            \frac{\mathrm{d}^{#1}}{\mathrm{d}#2^{#1}}%
+        }%
+    }{% 引数が2つ (\diff[n]{y}{x})
+        \IfNoValueTF{#1}{% n なし (\diff{y}{x})
+            \frac{\mathrm{d}#2}{\mathrm{d}#3}%
+        }{% n あり (\diff[n]{y}{x})
+            \frac{\mathrm{d}^{#1}#2}{\mathrm{d}#3^{#1}}%
+        }%
+    }%
+}
+
+\NewDocumentCommand{\sdiff}{ m }{%
+     \>\mathrm{d}#1%
+}
+
+\endinput

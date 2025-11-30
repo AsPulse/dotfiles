@@ -1,0 +1,20 @@
+font-feature = -dlig
+
+font-size = 12
+font-family = "JetBrainsMono Nerd Font"
+font-style-bold = "ExtraBold"
+
+
+theme = "Catppuccin Macchiato"
+
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+
+macos-option-as-alt = left
+
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+
+adjust-underline-position = 1
+adjust-underline-thickness = 2

@@ -1,0 +1,5 @@
+.DS_Store
+.direnv
+.envrc
+workspace.local.lua
+workspace.local.vim
