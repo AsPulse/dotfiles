@@ -11,5 +11,4 @@ vim.keymap.set(
   { remap = false, silent = true }
 )
 
-
 return nil

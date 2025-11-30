@@ -21,16 +21,16 @@ vim.keymap.set('n', '<leader>lazy', '<cmd>Lazy<cr>', { noremap = true })
 -- Setup Plugins
 local pluginSettings = required.under('plugin-settings')
 require('lazy').setup(pluginSettings, {
-  lockfile = "~/dotfiles/neovim/lazy-lock.json",
+  lockfile = '~/dotfiles/neovim/lazy-lock.json',
   ui = {
-    border = 'rounded'
+    border = 'rounded',
   },
   install = {
     missing = true,
-  }
+  },
 })
 
 -- Load Commands
 required.under('commands')
 
-vim.g.isReload = true;
+vim.g.isReload = true

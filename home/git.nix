@@ -1,4 +1,5 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
   programs.git = {
     enable = true;
     lfs.enable = true;
@@ -12,7 +13,6 @@
   home.file.".gitignore_global" = {
     source = ./git/.gitignore_global;
   };
-
 
   # GitHub
 
@@ -29,7 +29,6 @@
     };
   };
 
-
   # Signed Commit
 
   programs.gpg.enable = true;
@@ -39,10 +38,9 @@
     pinentryFlavor = "curses";
   };
 
-  home.file.".gnupg/gpg-agent.conf".text = 
-    lib.mkIf pkgs.stdenv.isDarwin ''
-      pinentry-program ${(pkgs.callPackage ./pinentry-touchid { }).outPath}/bin/pinentry-touchid
-    '';
+  home.file.".gnupg/gpg-agent.conf".text = lib.mkIf pkgs.stdenv.isDarwin ''
+    pinentry-program ${(pkgs.callPackage ./pinentry-touchid { }).outPath}/bin/pinentry-touchid
+  '';
 
   # lazygit
 
@@ -56,7 +54,7 @@
 
   home.packages = with pkgs; [
     lazygit
-    (pkgs.callPackage ./pinentry-touchid {  })
+    (pkgs.callPackage ./pinentry-touchid { })
     pinentry_mac
     difftastic
   ];

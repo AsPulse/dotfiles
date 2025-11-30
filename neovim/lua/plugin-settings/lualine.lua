@@ -5,9 +5,9 @@ return {
     event = 'VeryLazy',
     dependencies = {
       { 'marko-cerovac/material.nvim' },
-      { 'SmiteshP/nvim-navic' }
+      { 'SmiteshP/nvim-navic' },
     },
-    config = function ()
+    config = function()
       local navic = require('nvim-navic')
       navic.setup({
         highlight = true,
@@ -15,14 +15,14 @@ return {
       local show_macro_recording = function()
         local recording_register = vim.fn.reg_recording()
         if recording_register == '' then
-            return ''
+          return ''
         else
-            return 'Recording @' .. recording_register
+          return 'Recording @' .. recording_register
         end
       end
 
       local lualine = require('lualine')
-      lualine.setup {
+      lualine.setup({
         sections = {
           lualine_a = {
             'mode',
@@ -37,7 +37,7 @@ return {
                 local loc = navic.get_location()
                 return (loc or '')
               end,
-              condition = navic.is_available
+              condition = navic.is_available,
             },
           },
         },
@@ -47,29 +47,26 @@ return {
         extensions = {
           'fern',
           'quickfix',
-          'toggleterm'
-        }
-      }
+          'toggleterm',
+        },
+      })
 
       local lualine_refresh = function()
         lualine.refresh({
-          place = { "statusline" },
+          place = { 'statusline' },
         })
       end
 
-      vim.api.nvim_create_autocmd("RecordingEnter", {
+      vim.api.nvim_create_autocmd('RecordingEnter', {
         callback = lualine_refresh,
       })
 
-      vim.api.nvim_create_autocmd("RecordingLeave", {
+      vim.api.nvim_create_autocmd('RecordingLeave', {
         callback = function()
           local timer = vim.loop.new_timer()
-          if timer then
-            timer:start(50, 0, vim.schedule_wrap(lualine_refresh))
-          end
+          if timer then timer:start(50, 0, vim.schedule_wrap(lualine_refresh)) end
         end,
       })
-    end
-
-  }
+    end,
+  },
 }

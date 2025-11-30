@@ -3,7 +3,7 @@ return {
   {
     'zbirenbaum/copilot.lua',
     requires = {
-      'copilotlsp-nvim/copilot-lsp'
+      'copilotlsp-nvim/copilot-lsp',
     },
     cmd = 'Copilot',
     event = 'InsertEnter',

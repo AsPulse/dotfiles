@@ -3,9 +3,7 @@ return {
   {
     'vim-denops/denops.vim',
     lazy = true,
-    init = function ()
-      vim.api.nvim_set_var('denops#debug', 0)
-    end
+    init = function() vim.api.nvim_set_var('denops#debug', 0) end,
   },
   {
     'deris/vim-duzzle',
@@ -14,9 +12,7 @@ return {
   {
     'kkharji/sqlite.lua',
     lazy = true,
-    init = function ()
-      vim.g.sqlite_clib_path = vim.fn.expand('$HOME') .. '/bin/sqlite3/sqlite3.dll'
-    end
+    init = function() vim.g.sqlite_clib_path = vim.fn.expand('$HOME') .. '/bin/sqlite3/sqlite3.dll' end,
   },
   {
     'tyru/capture.vim',
@@ -41,12 +37,12 @@ return {
   {
     'thinca/vim-textobj-between',
     dependencies = {
-      'kana/vim-textobj-user'
+      'kana/vim-textobj-user',
     },
     event = 'BufEnter *.*',
   },
   {
     'nvim-tree/nvim-web-devicons',
-    opts = { },
-  }
+    opts = {},
+  },
 }

@@ -14,8 +14,8 @@ return {
       {
         'kento-ogata/cmp-tsnip',
         dependencies = {
-          'yuki-yano/tsnip.nvim'
-        }
+          'yuki-yano/tsnip.nvim',
+        },
       },
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'hrsh7th/cmp-path' },
@@ -28,9 +28,7 @@ return {
       cmp.setup({
         enabled = true,
         snippet = {
-          expand = function(args)
-            vim.fn['vsnip#anonymous'](args.body);
-          end
+          expand = function(args) vim.fn['vsnip#anonymous'](args.body) end,
         },
         mapping = cmp.mapping.preset.insert({
           ['<Tab>'] = cmp.mapping(function(fallback)
@@ -42,16 +40,14 @@ return {
           end, { 'i', 's' }),
 
           ['<S-Tab>'] = cmp.mapping(function()
-            if cmp.visible() then
-              cmp.select_prev_item()
-            end
+            if cmp.visible() then cmp.select_prev_item() end
           end, { 'i', 's' }),
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
         }),
         window = {
           completion = cmp.config.window.bordered({
             winhighlight = 'Normal:CmpFloating,FloatBorder:None,CursorLine:CmpFloatingCursor,Search:None',
-            col_offset = -3
+            col_offset = -3,
           }),
           documentation = cmp.config.window.bordered({
             winhighlight = 'Normal:CmpFloating,FloatBorder:None,Search:None',
@@ -71,7 +67,7 @@ return {
             local kind = require('lspkind').cmp_format({
               mode = 'symbol_text',
               menu = {
-                tsnip = 'Snippet'
+                tsnip = 'Snippet',
               },
               maxwidth = 50,
             })(entry, vim_item)
@@ -87,7 +83,7 @@ return {
             kind.menu = '  (' .. kind.menu .. ')'
             return kind
           end,
-        }
+        },
       })
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
@@ -97,12 +93,11 @@ return {
           {
             name = 'cmdline',
             option = {
-              ignore_cmds = { 'Man', '!' }
-            }
-          }
-        })
+              ignore_cmds = { 'Man', '!' },
+            },
+          },
+        }),
       })
-    end
-  }
+    end,
+  },
 }
-

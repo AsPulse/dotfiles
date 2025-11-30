@@ -1,5 +1,5 @@
 local opt = vim.opt
-local wo  = vim.wo
+local wo = vim.wo
 
 opt.encoding = 'utf-8'
 opt.autoread = true

@@ -7,6 +7,6 @@ return {
       require('symbols-outline').setup({
         show_numbers = true,
       })
-    end
-  }
+    end,
+  },
 }

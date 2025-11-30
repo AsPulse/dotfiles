@@ -20,7 +20,7 @@ return {
     event = 'VeryLazy',
     --- @type wk.Opts
     opts = {
-      preset = "helix",
+      preset = 'helix',
     },
   },
   {
@@ -28,7 +28,7 @@ return {
     event = { 'BufEnter *.*', 'VeryLazy' },
     opts = {
       signcolumn = false,
-      numhl = true
+      numhl = true,
     },
   },
   {
@@ -36,12 +36,12 @@ return {
     enabled = false,
     event = { 'BufEnter *.*', 'VeryLazy' },
     dependencies = { 'marko-cerovac/material.nvim' },
-    opts = { },
+    opts = {},
   },
   {
     'shellRaining/hlchunk.nvim',
     event = { 'BufEnter *.*', 'VeryLazy' },
-    opts = { },
+    opts = {},
   },
   {
     'j-hui/fidget.nvim',
@@ -49,8 +49,8 @@ return {
     tag = 'legacy',
     opts = {
       text = {
-        spinner = 'dots_pulse'
+        spinner = 'dots_pulse',
       },
     },
-  }
+  },
 }

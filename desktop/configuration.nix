@@ -1,4 +1,5 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
 
   environment.systemPackages = with pkgs; [
     git
@@ -19,7 +20,9 @@
 
   nix.enable = true;
 
-  environment.variables.LIBRARY_PATH = "${builtins.trace (lib.makeLibraryPath [ pkgs.libiconv ]) (lib.makeLibraryPath [ pkgs.libiconv ])}:$LIBRARY_PATH";
+  environment.variables.LIBRARY_PATH = "${
+    builtins.trace (lib.makeLibraryPath [ pkgs.libiconv ]) (lib.makeLibraryPath [ pkgs.libiconv ])
+  }:$LIBRARY_PATH";
 
   security.pam.services.sudo_local.touchIdAuth = lib.mkIf pkgs.stdenv.isDarwin true;
 

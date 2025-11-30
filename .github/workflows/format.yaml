@@ -1,0 +1,36 @@
+name: Format
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  formatting-nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@v21
+        with:
+          determinate: false
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+        with: 
+          use-flakehub: false
+      - run: nix build .#checks.x86_64-linux.formatting-nix
+  formatting-neovim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@v21
+        with:
+          determinate: false
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+        with: 
+          use-flakehub: false
+      - run: nix build .#checks.x86_64-linux.formatting-neovim

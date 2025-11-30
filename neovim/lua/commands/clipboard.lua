@@ -8,4 +8,4 @@ vim.g.clipboard = {
     ['+'] = 'pbpaste',
     ['*'] = 'pbpaste',
   },
-};
+}
