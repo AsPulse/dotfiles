@@ -18,11 +18,11 @@ jobs:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@v21
       - uses: DeterminateSystems/magic-nix-cache-action@v13
-      - run: nix build .#checks.x86_64-linux.formating-nix
+      - run: nix build .#checks.x86_64-linux.formatting-nix
   formatting-neovim:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@v21
       - uses: DeterminateSystems/magic-nix-cache-action@v13
-      - run: nix build .#checks.x86_64-linux.formating-neovim
+      - run: nix build .#checks.x86_64-linux.formatting-neovim
