@@ -2,27 +2,24 @@ function LeximaRulesReset()
   vim.fn['lexima#set_default_rules']()
   vim.fn['lexima#add_rule']({
     filetype = { 'typescript', 'typescriptreact' },
-    priority = 2,
     char = '<cr>',
-    delete = true,
+    delete = 1,
     at = [[css`\%#`]],
     input = '<cr>  ',
     input_after = '<cr>`;',
   })
   vim.fn['lexima#add_rule']({
     filetype = { 'typescriptreact', 'html' },
-    priority = 2,
     char = '<cr>',
     at = [[<.*>\%#<\/.*>]],
     input = '<cr>',
     input_after = '<cr>',
   })
   vim.fn['lexima#add_rule']({
-    filetype = { 'tex' },
-    priority = 2,
+    filetype = { 'tex', 'plaintex' },
     char = '<cr>',
-    at = [[\[\%#]],
-    input = [=[<cr>  ]=],
+    at = [=[\[\%#]=],
+    input = '<cr>  ',
     input_after = [=[<cr>\]]=],
   })
   vim.api.nvim_set_var('isLeximaLoaded', true)
