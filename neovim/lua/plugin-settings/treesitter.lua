@@ -1,14 +1,11 @@
 --- @type LazyPluginSpec[]
 return {
   {
-    'yioneko/nvim-yati',
+    'nvim-treesitter/nvim-treesitter',
     event = { 'BufEnter *.*', 'VeryLazy' },
+    build = ':TSUpdate',
     version = '*',
     dependencies = {
-      {
-        'nvim-treesitter/nvim-treesitter',
-        build = ':TSUpdate',
-      },
       {
         'nvim-treesitter/nvim-treesitter-context',
         opts = {},
@@ -51,15 +48,7 @@ return {
           'sql',
         },
         highlight = { enable = true },
-        indent = { enable = false },
-        yati = {
-          enable = true,
-          disable = { 'python' },
-
-          default_lazy = true,
-
-          default_fallback = 'auto',
-        },
+        indent = { enable = true },
       })
       vim.filetype.add({
         extension = {
