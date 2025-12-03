@@ -51,15 +51,7 @@ return {
           'sql',
         },
         highlight = { enable = true },
-        indent = { enable = false },
-        yati = {
-          enable = true,
-          disable = { 'python' },
-
-          default_lazy = true,
-
-          default_fallback = 'auto',
-        },
+        indent = { enable = true },
       })
       vim.filetype.add({
         extension = {
