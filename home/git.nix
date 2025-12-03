@@ -5,8 +5,14 @@
     lfs.enable = true;
     settings = {
       commit.gpgsign = true;
-      diff.external = "difft --display=inline --color=always";
       core.excludesfile = "~/.gitignore_global";
+      core.pager = "delta";
+      interactive.diffFilter = "delta --color-only";
+      delta = {
+        navigate = true;
+        line-numbers = true;
+      };
+      merge.conflictStyle = "zdiff3";
     };
   };
 
@@ -57,5 +63,6 @@
     (pkgs.callPackage ./pinentry-touchid { })
     pinentry_mac
     difftastic
+    delta
   ];
 }

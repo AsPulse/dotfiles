@@ -28,4 +28,5 @@ gui:
 
 git:
   pagers:
-    - useExternalDiffGitConfig: true
+    - pager: delta --paging=never
+    - externalDiffCommand: difft --color=always
