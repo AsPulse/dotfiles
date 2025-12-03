@@ -46,12 +46,9 @@ return {
         }),
         window = {
           completion = cmp.config.window.bordered({
-            winhighlight = 'Normal:CmpFloating,FloatBorder:None,CursorLine:CmpFloatingCursor,Search:None',
             col_offset = -3,
           }),
-          documentation = cmp.config.window.bordered({
-            winhighlight = 'Normal:CmpFloating,FloatBorder:None,Search:None',
-          }),
+          documentation = cmp.config.window.bordered({}),
         },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
