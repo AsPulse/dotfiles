@@ -2,5 +2,16 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "timezone": "Asia/Tokyo",
+  "dependencyDashboard": true,
+  "automerge": false,
+  "configMigration": true,
+  "packageRules": [
+    {
+      "matchDepTypes": [ "action" ],
+      "pinDigests": true,
+      "minimumReleaseAge": "7 days"
+    }
   ]
 }
