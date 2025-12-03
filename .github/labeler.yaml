@@ -1,0 +1,20 @@
+'scope: neovim':
+  - '/^neovim:/'
+
+'scope: lazygit':
+  - '/^lazygit:/'
+
+'scope: ime':
+  - '/^ime:/'
+
+'scope: terminal':
+  - '/^terminal:/'
+
+'scope: latex':
+  - '/^latex:/'
+
+'scope: nix':
+  - '/^nix:/'
+
+'scope: ci':
+  - '/^ci:/'
