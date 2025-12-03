@@ -9,7 +9,7 @@ return {
       {
         'nvim-treesitter/nvim-treesitter-context',
         opts = {},
-      }
+      },
     },
     config = function()
       require('nvim-treesitter.configs').setup({
