@@ -3,13 +3,7 @@ return {
   {
     'mrcjkb/rustaceanvim',
     version = '^4',
-    lazy = true,
-    ft = { 'rust' },
-    dependencies = {
-      'rust-lang/rust.vim',
-      'neovim/nvim-lspconfig',
-      'mfussenegger/nvim-dap',
-    },
+    lazy = false,
     init = function()
       -- Rust
       vim.g.rustaceanvim = {
@@ -28,6 +22,9 @@ return {
           end,
           default_settings = {
             ['rust-analyzer'] = {
+              files = {
+                excludeDirs = { '.direnv' },
+              },
               check = {
                 command = 'clippy',
               },
