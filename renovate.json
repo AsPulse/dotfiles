@@ -9,8 +9,17 @@
   "configMigration": true,
   "packageRules": [
     {
-      "matchDepTypes": [ "action" ],
-      "pinDigests": true,
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["pinDigest", "digest"],
+      "minimumReleaseAge": null
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"],
       "minimumReleaseAge": "7 days"
     }
   ]
