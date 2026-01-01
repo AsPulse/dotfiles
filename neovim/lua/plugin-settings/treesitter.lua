@@ -44,7 +44,6 @@ return {
           'helm',
           'latex',
           'nix',
-          'csv',
           'sql',
         },
         highlight = { enable = true },
