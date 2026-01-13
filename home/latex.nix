@@ -11,6 +11,7 @@ let
         ulem
         hyperref
         capt-of
+        pgfplots
         ;
       #(setq org-latex-compiler "lualatex")
       #(setq org-preview-latex-default-process 'dvisvgm)
