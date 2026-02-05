@@ -1,7 +1,7 @@
 --- @type LazyPluginSpec
 return {
   'akinsho/bufferline.nvim',
-  event = 'BufEnter *.*',
+  event = { 'BufEnter *.*', 'TabNew *.*' },
   branch = 'main',
   after = 'catppuccin',
   dependencies = {
