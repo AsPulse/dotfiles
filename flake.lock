@@ -277,6 +277,41 @@
         "type": "github"
       }
     },
+    "nixpkgs_6": {
+      "locked": {
+        "lastModified": 1770812194,
+        "narHash": "sha256-OH+lkaIKAvPXR3nITO7iYZwew2nW9Y7Xxq0yfM/UcUU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8482c7ded03bae7550f3d69884f1e611e3bd19e8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "opencode": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_6"
+      },
+      "locked": {
+        "lastModified": 1770997087,
+        "narHash": "sha256-g3YQQmSDrNtW7SXuGz6lFEqNpQ4/tmStLc1HY83Ibfw=",
+        "owner": "albertov",
+        "repo": "opencode",
+        "rev": "894c684aa5c5ca159d0cab1e7b27fa08c8b4294e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "albertov",
+        "ref": "dev",
+        "repo": "opencode",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "codex-nix": "codex-nix",
@@ -284,7 +319,8 @@
         "lazygit": "lazygit",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs_5",
-        "nixpkgs-module": "nixpkgs-module"
+        "nixpkgs-module": "nixpkgs-module",
+        "opencode": "opencode"
       }
     },
     "systems": {

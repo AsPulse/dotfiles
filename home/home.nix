@@ -1,4 +1,4 @@
-{ pkgs, codex-nix, ... }:
+{ pkgs, codex-nix, opencode, ... }:
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -36,6 +36,7 @@
     ngrok
     claude-code
     codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   imports = [

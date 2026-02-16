@@ -8,6 +8,7 @@
     codex-nix.url = "github:sadjow/codex-nix";
     lazygit.url = "github:jesseduffield/lazygit";
     flake-utils.url = "github:numtide/flake-utils";
+    opencode.url = "github:albertov/opencode/dev";
   };
 
   outputs =
@@ -19,6 +20,7 @@
       neovim-nightly-overlay,
       lazygit,
       codex-nix,
+      opencode,
       ...
     }:
     let
@@ -102,7 +104,7 @@
             args
             // {
               pkgs = pkgs-module;
-              inherit codex-nix;
+              inherit codex-nix opencode;
             }
           );
       }
