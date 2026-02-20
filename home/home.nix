@@ -1,4 +1,4 @@
-{ pkgs, codex-nix, opencode, ... }:
+{ pkgs, codex-nix, opencode, claude-code-nix, ... }:
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -34,7 +34,7 @@
     skimpdf
     subversion
     ngrok
-    claude-code
+    claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
