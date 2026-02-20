@@ -53,6 +53,7 @@
     ./kubernetes.nix
     ./direnv.nix
     ./ime.nix
+    ./claude.nix
   ];
 
   programs.home-manager.enable = true;
