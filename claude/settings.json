@@ -22,5 +22,13 @@
   "attribution": {
     "commit": "",
     "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.schemastore.org)",
+      "Bash(gh search:*)"
+    ]
   }
 }
