@@ -10,6 +10,8 @@
     lazygit.url = "github:jesseduffield/lazygit";
     flake-utils.url = "github:numtide/flake-utils";
     opencode.url = "github:albertov/opencode/dev";
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
   };
 
   outputs =
@@ -23,6 +25,7 @@
       claude-code-nix,
       codex-nix,
       opencode,
+      nix-index-database,
       ...
     }:
     let
@@ -106,7 +109,7 @@
             args
             // {
               pkgs = pkgs-module;
-              inherit codex-nix opencode claude-code-nix;
+              inherit codex-nix opencode claude-code-nix nix-index-database;
             }
           );
       }

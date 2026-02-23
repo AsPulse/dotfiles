@@ -1,4 +1,4 @@
-{ pkgs, codex-nix, opencode, claude-code-nix, ... }:
+{ pkgs, codex-nix, opencode, claude-code-nix, nix-index-database, ... }:
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -40,6 +40,8 @@
   ];
 
   imports = [
+    nix-index-database.hmModules.nix-index
+    ./comma.nix
     ./terminal.nix
     ./git.nix
     ./neovim.nix
