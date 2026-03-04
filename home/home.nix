@@ -40,7 +40,7 @@
   ];
 
   imports = [
-    nix-index-database.hmModules.nix-index
+    nix-index-database.homeModules.nix-index
     ./comma.nix
     ./terminal.nix
     ./git.nix
