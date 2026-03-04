@@ -6,6 +6,8 @@
     zellij
   ];
 
+  home.file.".terminfo".source = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
+
   home.file.".config/ghostty/config".source = ../terminal/ghostty/config;
 
   home.file.".config/zellij/config.kdl".source = ../terminal/zellij/config.kdl;
