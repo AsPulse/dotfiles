@@ -8,6 +8,8 @@
 
   home.file.".config/ghostty/config".source = ../terminal/ghostty/config;
 
+  home.file.".config/zellij/config.kdl".source = ../terminal/zellij/config.kdl;
+
   home.file.".config/starship.toml".source = ../terminal/starship/starship.toml;
 
   programs.zsh = {
