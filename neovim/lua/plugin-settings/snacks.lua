@@ -11,7 +11,10 @@ return {
       configure = false,
     },
     indent = { enabled = true },
-    explorer = {},
+    explorer = {
+      hidden = true,
+      ignored = true,
+    },
     picker = {
       enabled = true,
       sources = {
