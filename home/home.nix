@@ -66,5 +66,6 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    COLORTERM = "truecolor";
   };
 }
