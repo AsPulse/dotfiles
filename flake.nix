@@ -9,7 +9,7 @@
     codex-nix.url = "github:sadjow/codex-nix";
     lazygit.url = "github:jesseduffield/lazygit";
     flake-utils.url = "github:numtide/flake-utils";
-    opencode.url = "github:albertov/opencode/dev";
+    opencode.url = "github:anomalyco/opencode";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
   };
