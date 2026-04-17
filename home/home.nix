@@ -43,6 +43,7 @@
     nix-index-database.homeModules.nix-index
     ./comma.nix
     ./terminal.nix
+    ./opencode.nix
     ./git.nix
     ./neovim.nix
     ./node.nix
