@@ -13,7 +13,14 @@ in
 
   home.file.".config/ghostty/config".source = ../terminal/ghostty/config;
 
-  home.file.".config/zellij/config.kdl".source = ../terminal/zellij/config.kdl;
+  home.file.".config/zellij/config.kdl".text =
+    let
+      base = builtins.readFile ../terminal/zellij/config.kdl;
+    in
+    if pkgs.stdenv.isLinux then
+      builtins.replaceStrings [ "mouse_mode true" ] [ "mouse_mode false" ] base
+    else
+      base;
 
   home.file.".config/starship.toml".source = ../terminal/starship/starship.toml;
 
