@@ -72,6 +72,7 @@
     ./skkeleton.nix
     ./mosh.nix
     ./ha.nix
+    ./lemonade.nix
   ];
 
   programs.home-manager.enable = true;
