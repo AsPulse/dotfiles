@@ -41,12 +41,14 @@
 
   services.gpg-agent = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
-    pinentryFlavor = "curses";
+    pinentryPackage = pkgs.pinentry-curses;
   };
 
-  home.file.".gnupg/gpg-agent.conf".text = lib.mkIf pkgs.stdenv.isDarwin ''
-    pinentry-program ${(pkgs.callPackage ./pinentry-touchid { }).outPath}/bin/pinentry-touchid
-  '';
+  home.file.".gnupg/gpg-agent.conf" = lib.mkIf pkgs.stdenv.isDarwin {
+    text = ''
+      pinentry-program ${(pkgs.callPackage ./pinentry-touchid { }).outPath}/bin/pinentry-touchid
+    '';
+  };
 
   # lazygit
 
@@ -58,11 +60,14 @@
     source = ../lazygit/config.yml;
   };
 
-  home.packages = with pkgs; [
-    lazygit
-    (pkgs.callPackage ./pinentry-touchid { })
-    pinentry_mac
-    difftastic
-    delta
-  ];
+  home.packages =
+    (with pkgs; [
+      lazygit
+      difftastic
+      delta
+    ])
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      pkgs.pinentry_mac
+      (pkgs.callPackage ./pinentry-touchid { })
+    ];
 }

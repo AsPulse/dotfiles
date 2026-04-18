@@ -1,12 +1,15 @@
 { pkgs, ... }:
+let
+  ghosttyPkg = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+in
 {
 
-  home.packages = with pkgs; [
-    ghostty-bin
-    zellij
+  home.packages = [
+    ghosttyPkg
+    pkgs.zellij
   ];
 
-  home.file.".terminfo".source = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
+  home.file.".terminfo".source = "${ghosttyPkg.terminfo}/share/terminfo";
 
   home.file.".config/ghostty/config".source = ../terminal/ghostty/config;
 

@@ -1,4 +1,4 @@
-{ pkgs, codex-nix, opencode, claude-code-nix, nix-index-database, ... }:
+{ lib, pkgs, codex-nix, opencode, claude-code-nix, nix-index-database, ... }:
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -12,32 +12,37 @@
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
-  home.packages = with pkgs; [
-    bat
-    eza
-    ripgrep
-    fzf
-    fd
-    dust
-    jq
-    yq
-    imagemagick
-    ghostscript
-    neofetch
-    nkf
-    jellyfin-ffmpeg
-    act
-    google-cloud-sdk
-    cilium-cli
-    mongosh
-    mongodb-tools
-    skimpdf
-    subversion
-    ngrok
-    claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
-    codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
-    opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+  home.packages =
+    (with pkgs; [
+      bat
+      eza
+      ripgrep
+      fzf
+      fd
+      dust
+      jq
+      yq
+      imagemagick
+      ghostscript
+      neofetch
+      nkf
+      jellyfin-ffmpeg
+      act
+      google-cloud-sdk
+      cilium-cli
+      mongosh
+      mongodb-tools
+      subversion
+      ngrok
+      claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+      codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ])
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      pkgs.skimpdf
+      # opencode's Linux build is currently broken upstream (fixed-output hash
+      # mismatch for node_modules). Ship it on Darwin only for now.
+      opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ];
 
   imports = [
     nix-index-database.homeModules.nix-index
