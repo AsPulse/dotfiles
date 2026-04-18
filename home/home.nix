@@ -61,6 +61,7 @@
     ./kubernetes.nix
     ./direnv.nix
     ./ime.nix
+    ./mosh.nix
     ./ha.nix
   ];
 
