@@ -1,4 +1,12 @@
-{ lib, pkgs, codex-nix, opencode, claude-code-nix, nix-index-database, ... }:
+{
+  lib,
+  pkgs,
+  codex-nix,
+  opencode,
+  claude-code-nix,
+  nix-index-database,
+  ...
+}:
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.

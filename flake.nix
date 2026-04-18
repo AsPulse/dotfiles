@@ -109,7 +109,12 @@
             args
             // {
               pkgs = pkgs-module;
-              inherit codex-nix opencode claude-code-nix nix-index-database;
+              inherit
+                codex-nix
+                opencode
+                claude-code-nix
+                nix-index-database
+                ;
             }
           );
       }
