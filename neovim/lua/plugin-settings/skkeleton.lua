@@ -10,10 +10,10 @@ return {
         debug = false,
         eggLikeNewline = true,
         globalDictionaries = {
-          '~/Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Dictionaries/SKK-JISYO.L',
+          '~/.skk/SKK-JISYO.L',
         },
         globalKanaTableFiles = {
-          { '~/Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings/kana-rule.conf', 'utf8' },
+          { '~/.skk/kana-rule.conf', 'utf8' },
         },
         userDictionary = '~/.skk/skkeleton.txt',
       })
