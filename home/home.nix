@@ -44,12 +44,12 @@
       ngrok
       claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
       codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+      # opencode's Linux build is currently broken upstream (fixed-output hash
+      # mismatch for node_modules). Disabled for now.
+      # opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
     ])
     ++ lib.optionals pkgs.stdenv.isDarwin [
       pkgs.skimpdf
-      # opencode's Linux build is currently broken upstream (fixed-output hash
-      # mismatch for node_modules). Ship it on Darwin only for now.
-      opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
   imports = [
