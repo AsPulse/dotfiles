@@ -13,7 +13,8 @@ in
 {
   home.packages = [
     pkgs.lemonade
-  ] ++ lib.optionals pkgs.stdenv.isLinux [ lemonade-open ];
+  ]
+  ++ lib.optionals pkgs.stdenv.isLinux [ lemonade-open ];
 
   # server / client 両方が同じ toml を読む。`allow` は server 用、`host`/`port`
   # は client 用。SSH RemoteForward 経由で 2489 をループバック越しに通す。

@@ -73,6 +73,7 @@
     ./mosh.nix
     ./ha.nix
     ./lemonade.nix
+    ./cc-clip.nix
   ];
 
   programs.home-manager.enable = true;
