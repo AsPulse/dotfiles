@@ -63,6 +63,16 @@
     ''
   );
 
+  systemd.user.services.gnupg-runtime-dir = lib.mkIf pkgs.stdenv.isLinux {
+    Unit.Description = "Pre-create %t/gnupg for SSH RemoteForward";
+    Service = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.coreutils}/bin/install -d -m 700 %t/gnupg";
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
+
   # lazygit
 
   home.file.".config/lazygit/config.yml" = lib.mkIf pkgs.stdenv.isLinux {
