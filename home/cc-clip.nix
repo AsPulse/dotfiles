@@ -168,7 +168,12 @@ let
   '';
 in
 {
-  home.packages = [ cc-clip ];
+  home.packages = [
+    cc-clip
+  ]
+  ++ lib.optionals pkgs.stdenv.isDarwin [
+    pkgs.pngpaste
+  ];
 
   home.file = lib.mkIf pkgs.stdenv.isLinux {
     ".local/bin/xclip" = {
@@ -188,6 +193,7 @@ in
         "${cc-clip}/bin/cc-clip"
         "serve"
       ];
+      EnvironmentVariables.PATH = "${pkgs.pngpaste}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
       RunAtLoad = true;
       KeepAlive = true;
       StandardOutPath = "/Users/aspulse/Library/Logs/cc-clip.out.log";
