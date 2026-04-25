@@ -42,6 +42,7 @@
       mongodb-tools
       subversion
       ngrok
+      cloudflared
       claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
       codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
       # opencode's Linux build is currently broken upstream (fixed-output hash
