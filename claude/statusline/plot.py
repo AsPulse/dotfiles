@@ -1,19 +1,72 @@
 #!/usr/bin/env python3
 """Plot rate limit usage from SQLite as an interactive Plotly chart."""
 
+import argparse
 import os
+from pathlib import Path
+import shlex
+import shutil
 import sqlite3
 import subprocess
 import sys
 import tempfile
-
-import numpy as np
-import plotly.graph_objects as go
-from scipy.ndimage import uniform_filter1d
 from datetime import datetime, timezone, timedelta
 
 DB_PATH = os.path.expanduser("~/.local/share/claude-statusline/rate_limits.db")
+DEFAULT_OUT = Path(tempfile.gettempdir()) / "rate_limit.html"
 JST = timezone(timedelta(hours=9))
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        default=DEFAULT_OUT,
+        help=f"output HTML path (default: {DEFAULT_OUT})",
+    )
+    parser.add_argument(
+        "--no-open",
+        action="store_true",
+        help="write the HTML file without opening it",
+    )
+    return parser.parse_args()
+
+
+def browser_env_commands(browser, path):
+    for candidate in browser.split(os.pathsep):
+        candidate = candidate.strip()
+        if not candidate:
+            continue
+        if "%s" in candidate:
+            yield shlex.split(candidate.replace("%s", shlex.quote(str(path))))
+        else:
+            yield shlex.split(candidate) + [str(path)]
+
+
+def open_html(path):
+    commands = []
+    browser = os.environ.get("BROWSER")
+    if browser:
+        commands.extend(browser_env_commands(browser, path))
+    if sys.platform == "darwin":
+        commands.append(["open", str(path)])
+    if shutil.which("xdg-open"):
+        commands.append(["xdg-open", str(path)])
+
+    failures = []
+    for command in commands:
+        try:
+            subprocess.run(command, check=True)
+            return command[0]
+        except (FileNotFoundError, subprocess.CalledProcessError) as exc:
+            failures.append(f"{command[0]}: {exc}")
+
+    detail = "\n".join(failures)
+    if detail:
+        raise RuntimeError(f"failed to open {path}\n{detail}")
+    raise RuntimeError("no browser opener found; set BROWSER or use --no-open")
 
 
 def parse(rows):
@@ -23,6 +76,9 @@ def parse(rows):
 
 
 def smooth_time_based(times, pcts, interval_sec=60, window_sec=600):
+    import numpy as np
+    from scipy.ndimage import uniform_filter1d
+
     ts = np.array([t.timestamp() for t in times])
     t_uniform = np.arange(ts[0], ts[-1], interval_sec)
     p_uniform = np.interp(t_uniform, ts, pcts)
@@ -33,6 +89,10 @@ def smooth_time_based(times, pcts, interval_sec=60, window_sec=600):
 
 
 def main():
+    args = parse_args()
+
+    import plotly.graph_objects as go
+
     conn = sqlite3.connect(DB_PATH)
     rows_5h = conn.execute(
         "SELECT recorded_at, used_pct FROM rate_limits WHERE window = '5h' ORDER BY recorded_at"
@@ -62,10 +122,14 @@ def main():
         legend=dict(orientation="h", yanchor="bottom", y=1.02),
     )
 
-    out = os.path.join(tempfile.gettempdir(), "rate_limit.html")
+    out = args.output.expanduser().resolve()
     fig.write_html(out)
-    subprocess.run(["open", out])
-    print(f"Opened {out}")
+    if args.no_open:
+        print(f"Wrote {out}")
+        return
+
+    opener = open_html(out)
+    print(f"Opened {out} via {opener}")
 
 
 if __name__ == "__main__":
