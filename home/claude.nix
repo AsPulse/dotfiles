@@ -6,8 +6,19 @@ let
     src = ../claude/statusline;
     cargoLock.lockFile = ../claude/statusline/Cargo.lock;
   };
+  plotPython = pkgs.python3.withPackages (
+    ps: with ps; [
+      plotly
+      numpy
+      scipy
+    ]
+  );
+  claude-rate-limit-plot = pkgs.writeShellScriptBin "claude-rate-limit-plot" ''
+    exec ${plotPython}/bin/python3 ${../claude/statusline/plot.py} "$@"
+  '';
 in
 {
+  home.packages = [ claude-rate-limit-plot ];
   home.file.".claude/statusline" = {
     source = "${claude-statusline}/bin/claude-statusline";
     executable = true;
