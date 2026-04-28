@@ -12,4 +12,8 @@
     sccache
   ];
 
+  home.file.".cargo/config.toml".text = ''
+    [build]
+    rustc-wrapper = "sccache"
+  '';
 }
