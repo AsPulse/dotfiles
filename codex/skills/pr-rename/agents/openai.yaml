@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Rename"
+  short_description: "Rename a PR or revise its description"
+  default_prompt: "Use $pr-rename to update the title and/or body of a pull request."

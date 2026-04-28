@@ -1,0 +1,4 @@
+interface:
+  display_name: "Branch Create"
+  short_description: "Create a branch that matches repo naming"
+  default_prompt: "Use $branch-create to create a new working branch for this task."

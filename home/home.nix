@@ -76,6 +76,7 @@
     ./lemonade.nix
     ./cc-clip.nix
     ./claude.nix
+    ./codex.nix
   ];
 
   programs.home-manager.enable = true;

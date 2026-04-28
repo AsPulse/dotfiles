@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Create"
+  short_description: "Draft and create a GitHub pull request"
+  default_prompt: "Use $pr-create to draft and create a pull request for the current branch."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Branch Rename"
+  short_description: "Rename a branch to match repo conventions"
+  default_prompt: "Use $branch-rename to rename the current branch to fit the repository's conventions."

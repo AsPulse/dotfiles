@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit"
+  short_description: "Create a commit that matches repo conventions"
+  default_prompt: "Use $commit to review the current changes and create an appropriate commit."
