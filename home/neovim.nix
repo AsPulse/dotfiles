@@ -29,6 +29,7 @@
       pyright
       sshfs
       tombi
+      kotlin-language-server
     ]
     ++ (with pkgs.nodePackages; [
       typescript-language-server

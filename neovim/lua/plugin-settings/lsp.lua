@@ -216,6 +216,9 @@ return {
 
       vim.lsp.enable('pyright')
 
+      -- kotlin-language-server
+      vim.lsp.enable('kotlin_language_server')
+
       -- LspAttach Setup
       local navic = require('nvim-navic')
       vim.api.nvim_create_autocmd('LspAttach', {
