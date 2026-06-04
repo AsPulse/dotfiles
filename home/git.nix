@@ -39,38 +39,13 @@
 
   programs.gpg.enable = true;
 
-  # Linux gpg must not spawn a local agent — signing goes through the Mac's
-  # gpg-agent via SSH RemoteForward, and a local agent would claim the socket.
-  programs.gpg.settings = lib.mkIf pkgs.stdenv.isLinux {
-    no-autostart = true;
-  };
-
+  # macOS は Touch ID で署名 (pinentry-touchid は public flake ローカルのためここに置く)。
+  # Linux 側の gpg 運用設定 (キャッシュ・pinentry・開錠ヘルパ) はマシン固有なので
+  # private/home/gpg.nix に置く。
   home.file.".gnupg/gpg-agent.conf" = lib.mkIf pkgs.stdenv.isDarwin {
     text = ''
       pinentry-program ${(pkgs.callPackage ./pinentry-touchid { }).outPath}/bin/pinentry-touchid
     '';
-  };
-
-  # Parent dir of the RemoteForward-ed gpg-agent socket. Lives in tmpfs.
-  home.activation.ensureGpgSocketDir = lib.mkIf pkgs.stdenv.isLinux (
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      runtime_dir="''${XDG_RUNTIME_DIR:-}"
-      [ -z "$runtime_dir" ] && runtime_dir="/run/user/$(id -u)"
-      if [ -d "$runtime_dir" ]; then
-        mkdir -p "$runtime_dir/gnupg"
-        chmod 700 "$runtime_dir/gnupg"
-      fi
-    ''
-  );
-
-  systemd.user.services.gnupg-runtime-dir = lib.mkIf pkgs.stdenv.isLinux {
-    Unit.Description = "Pre-create %t/gnupg for SSH RemoteForward";
-    Service = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.coreutils}/bin/install -d -m 700 %t/gnupg";
-    };
-    Install.WantedBy = [ "default.target" ];
   };
 
   # lazygit
@@ -92,5 +67,8 @@
     ++ lib.optionals pkgs.stdenv.isDarwin [
       pkgs.pinentry_mac
       (pkgs.callPackage ./pinentry-touchid { })
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      pkgs.pinentry-curses
     ];
 }
