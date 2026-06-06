@@ -36,6 +36,7 @@
       nkf
       jellyfin-ffmpeg
       act
+      process-compose
       google-cloud-sdk
       cilium-cli
       mongosh
