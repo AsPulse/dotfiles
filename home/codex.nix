@@ -5,6 +5,9 @@
 }:
 let
   codexSkillsDir = "${config.home.homeDirectory}/.codex/skills";
+  codexStandaloneDir = "${config.home.homeDirectory}/.codex/packages/standalone/current";
+  codexStandaloneBin = "${codexStandaloneDir}/codex";
+  codexProfileBin = "${config.home.profileDirectory}/bin/codex";
   skillNames = [
     "pr-create"
     "pr-rename"
@@ -31,5 +34,17 @@ in
 
     mkdir -p ${lib.escapeShellArg codexSkillsDir}
     ${lib.concatStringsSep "\n" (map installSkill skillNames)}
+  '';
+
+  # Workaround for `codex remote-control`: the daemon currently insists on the
+  # installer-managed standalone path. Point that fixed path at the Home Manager
+  # profile binary while leaving a real installer-managed file untouched.
+  home.activation.linkCodexStandaloneBinary = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    set -eu
+
+    mkdir -p ${lib.escapeShellArg codexStandaloneDir}
+    if [ ! -e ${lib.escapeShellArg codexStandaloneBin} ] || [ -L ${lib.escapeShellArg codexStandaloneBin} ]; then
+      ln -sfn ${lib.escapeShellArg codexProfileBin} ${lib.escapeShellArg codexStandaloneBin}
+    fi
   '';
 }
