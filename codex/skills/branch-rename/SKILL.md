@@ -16,7 +16,7 @@ Rename the current branch based on its existing commits and any planned upcoming
    - inspect recent local branch names to infer naming conventions
    - if local branches are not enough, also inspect recently merged PR branch names
    - skim the commits already on this branch to understand what it actually contains
-2. Check whether the branch already has an upstream (i.e. has been pushed). If it has, warn the user before doing anything else and ask how to handle the remote. Offer at minimum:
+2. Check whether the branch already has an upstream (i.e. has been pushed). If it has, warn the user before doing anything else using `request_user_input`, and ask how to handle the remote. Put `cancel` first and offer at minimum:
    - cancel
    - rename only the local branch and leave the old remote branch alone
    - rename locally, push the new name, and delete the old remote branch
@@ -24,8 +24,8 @@ Rename the current branch based on its existing commits and any planned upcoming
 3. Derive a new branch name:
    - if the user supplied a name and it already matches the repository's conventions, use it as-is
    - if the user supplied a description, generate a name from it
-   - if the user gave no input, infer the intent from the existing commits, factoring in any upcoming work the user has hinted at; if the direction is still ambiguous, ask
-4. Show the old name, the proposed new name, and (if applicable) the chosen remote handling to the user and ask for approval. If the user wants changes, revise and confirm again.
+   - if the user gave no input, infer the intent from the existing commits, factoring in any upcoming work the user has hinted at; if the direction is still ambiguous, ask using `request_user_input`
+4. Show the old name, the proposed new name, and (if applicable) the chosen remote handling to the user using `request_user_input`. Offer options to approve or request changes. If the user wants changes, revise and confirm again with `request_user_input`.
 5. After approval:
    - rename the local branch
    - if the user chose to update the remote, push the new name with upstream tracking and delete the old remote branch

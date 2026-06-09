@@ -20,13 +20,13 @@ Before asking questions, gather the repository context:
 - discover available labels, milestones, projects, and issue types when those features are enabled
 - inspect issue templates if the repository uses them
 
-If you cannot identify the repository from the current directory, ask the user which repository to use.
+If you cannot identify the repository from the current directory, ask the user which repository to use with `request_user_input`.
 
 ### 2. Confirm the issue with the user
 
-Use the investigation results to guide the conversation.
+Use the investigation results to guide the conversation. Use `request_user_input` for every clarifying question, metadata choice, and approval prompt. Keep each call to one to three focused questions, provide concrete choices where possible, and rely on the automatic free-form `Other` option for custom answers.
 
-1. Clarify the issue topic if the request is still too vague.
+1. Clarify the issue topic with `request_user_input` if the request is still too vague.
 2. Propose a title and body that match the repository's conventions.
 3. Ask only about metadata that the repository actually supports and that seems relevant:
    - labels
@@ -36,7 +36,7 @@ Use the investigation results to guide the conversation.
    - parent issue
    - blocking relationships
    - project
-4. Present a complete summary of the final issue and ask for explicit approval.
+4. Present a complete summary of the final issue and ask for explicit approval using `request_user_input`.
 
 ### 3. Create the issue
 
