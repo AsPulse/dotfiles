@@ -6,7 +6,6 @@
     nixpkgs-module.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     claude-code-nix.url = "github:sadjow/claude-code-nix";
-    codex-nix.url = "github:sadjow/codex-nix";
     lazygit.url = "github:jesseduffield/lazygit";
     flake-utils.url = "github:numtide/flake-utils";
     opencode.url = "github:anomalyco/opencode";
@@ -23,7 +22,6 @@
       neovim-nightly-overlay,
       lazygit,
       claude-code-nix,
-      codex-nix,
       opencode,
       nix-index-database,
       ...
@@ -110,7 +108,6 @@
             // {
               pkgs = pkgs-module;
               inherit
-                codex-nix
                 opencode
                 claude-code-nix
                 nix-index-database

@@ -1,12 +1,62 @@
 {
   lib,
   pkgs,
-  codex-nix,
   opencode,
   claude-code-nix,
   nix-index-database,
   ...
 }:
+let
+  codexVersion = "0.141.0";
+  codexReleases = {
+    x86_64-linux = {
+      asset = "codex-package-x86_64-unknown-linux-musl.tar.gz";
+      hash = "sha256-CRyKLic3DEFAf6HLZH/pBb1P1w5GicE+/+4KLc4bKwc=";
+    };
+    aarch64-linux = {
+      asset = "codex-package-aarch64-unknown-linux-musl.tar.gz";
+      hash = "sha256-twAwM4WS3j42Hzzeg9Yk+IBh3zAKvjG2IHWlxaBYpvw=";
+    };
+    x86_64-darwin = {
+      asset = "codex-package-x86_64-apple-darwin.tar.gz";
+      hash = "sha256-tbsa+cgjMGtoLKjVwvGGENXww9Xb5GdLC18Y7s05hqc=";
+    };
+    aarch64-darwin = {
+      asset = "codex-package-aarch64-apple-darwin.tar.gz";
+      hash = "sha256-o38WiPabOLHO0FYIbSM+ZHhHQP4ZoqFeOtwcaCjhuTM=";
+    };
+  };
+  codexRelease = codexReleases.${pkgs.stdenv.hostPlatform.system};
+
+  codexPackage = pkgs.stdenvNoCC.mkDerivation {
+    pname = "codex";
+    version = codexVersion;
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/openai/codex/releases/download/rust-v${codexVersion}/${codexRelease.asset}";
+      inherit (codexRelease) hash;
+    };
+
+    sourceRoot = ".";
+    dontPatchELF = true;
+    dontStrip = true;
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p "$out"
+      cp -R bin codex-package.json codex-path codex-resources "$out/"
+      runHook postInstall
+    '';
+
+    meta = {
+      description = "OpenAI Codex CLI";
+      homepage = "https://github.com/openai/codex";
+      license = lib.licenses.asl20;
+      mainProgram = "codex";
+      platforms = builtins.attrNames codexReleases;
+    };
+  };
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -45,7 +95,7 @@
       ngrok
       cloudflared
       claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
-      codex-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+      codexPackage
       # opencode's Linux build is currently broken upstream (fixed-output hash
       # mismatch for node_modules). Disabled for now.
       # opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
