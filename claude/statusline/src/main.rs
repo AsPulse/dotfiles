@@ -1,7 +1,12 @@
 use chrono::{DateTime, Datelike, Duration, Local, Timelike, Utc};
-use rusqlite::Connection;
+use rusqlite::{Connection, OpenFlags, OptionalExtension};
 use serde::Deserialize;
-use std::io::Read as _;
+use std::env;
+use std::fmt::Write as _;
+use std::io::{Read as _, Write as _};
+use std::net::{TcpListener, TcpStream};
+use std::path::PathBuf;
+use std::time::Duration as StdDuration;
 
 const GREEN: &str = "\x1b[38;2;151;201;195m";
 const ORANGE: &str = "\x1b[38;2;209;154;102m";
@@ -12,6 +17,8 @@ const RESET: &str = "\x1b[0m";
 
 const FIVE_HOUR_SECS: i64 = 18000;
 const SEVEN_DAY_SECS: i64 = 604800;
+const EXPORTER_DEFAULT_ADDR: &str = "127.0.0.1:14319";
+const RATE_LIMIT_WINDOWS: [&str; 2] = ["5h", "7d"];
 
 #[derive(Deserialize, Default)]
 struct Input {
@@ -56,7 +63,23 @@ struct WindowUsage {
     resets_at: Option<i64>,
 }
 
+struct LatestRateLimit {
+    window: &'static str,
+    recorded_at_seconds: Option<i64>,
+    used_pct: f64,
+    resets_at: Option<i64>,
+    records: i64,
+}
+
 fn main() {
+    if env::args().skip(1).any(|arg| arg == "--exporter") {
+        if let Err(err) = run_exporter() {
+            eprintln!("claude-rate-limit-exporter: {err}");
+            std::process::exit(1);
+        }
+        return;
+    }
+
     let _ = run();
 }
 
@@ -65,10 +88,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     std::io::stdin().read_to_string(&mut input_str)?;
     let input: Input = serde_json::from_str(&input_str)?;
 
-    let model = input
-        .model
-        .and_then(|m| m.display_name)
-        .unwrap_or_default();
+    let model = input.model.and_then(|m| m.display_name).unwrap_or_default();
     let ctx_str = input
         .context_window
         .and_then(|c| c.used_percentage)
@@ -103,14 +123,10 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     record_rate_limits(&input.rate_limits, now);
 
     if let Some(ref rl) = input.rate_limits {
-        if let Some(line) =
-            format_window("5h", GREEN, &rl.five_hour, FIVE_HOUR_SECS, now, true)
-        {
+        if let Some(line) = format_window("5h", GREEN, &rl.five_hour, FIVE_HOUR_SECS, now, true) {
             print!("\n{line}");
         }
-        if let Some(line) =
-            format_window("7d", ORANGE, &rl.seven_day, SEVEN_DAY_SECS, now, false)
-        {
+        if let Some(line) = format_window("7d", ORANGE, &rl.seven_day, SEVEN_DAY_SECS, now, false) {
             print!("\n{line}");
         }
     }
@@ -385,11 +401,7 @@ fn format_window(
     let util = w.used_percentage.unwrap();
     let util_int = util as i64;
 
-    let bar_color = if !relative_reset {
-        Some(ORANGE)
-    } else {
-        None
-    };
+    let bar_color = if !relative_reset { Some(ORANGE) } else { None };
     let bar = progress_bar(util_int, bar_color);
 
     let mut line = format!("{label_color}{label}{RESET}  {bar} {DIM}{util_int:>3}%{RESET}");
@@ -424,4 +436,195 @@ fn format_window(
     }
 
     Some(line)
+}
+
+fn run_exporter() -> Result<(), Box<dyn std::error::Error>> {
+    let addr = env::var("CLAUDE_STATUSLINE_EXPORTER_ADDR")
+        .unwrap_or_else(|_| EXPORTER_DEFAULT_ADDR.into());
+    let listener = TcpListener::bind(&addr)?;
+    eprintln!("claude-rate-limit-exporter listening on http://{addr}/metrics");
+
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                if let Err(err) = handle_exporter_client(stream) {
+                    eprintln!("claude-rate-limit-exporter: request failed: {err}");
+                }
+            }
+            Err(err) => eprintln!("claude-rate-limit-exporter: accept failed: {err}"),
+        }
+    }
+
+    Ok(())
+}
+
+fn handle_exporter_client(mut stream: TcpStream) -> std::io::Result<()> {
+    let _ = stream.set_read_timeout(Some(StdDuration::from_secs(2)));
+
+    let mut buffer = [0_u8; 1024];
+    let bytes_read = stream.read(&mut buffer)?;
+    let request = String::from_utf8_lossy(&buffer[..bytes_read]);
+    let path = request
+        .lines()
+        .next()
+        .and_then(|line| line.split_whitespace().nth(1))
+        .unwrap_or("/");
+
+    let (status, content_type, body) = match path {
+        "/" => (
+            "200 OK",
+            "text/plain; charset=utf-8",
+            "claude-rate-limit-exporter\n\nGET /metrics\n".to_string(),
+        ),
+        "/metrics" => (
+            "200 OK",
+            "text/plain; version=0.0.4",
+            render_exporter_metrics(),
+        ),
+        _ => (
+            "404 Not Found",
+            "text/plain; charset=utf-8",
+            "not found\n".to_string(),
+        ),
+    };
+
+    let response = format!(
+        "HTTP/1.1 {status}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+        body.len()
+    );
+    stream.write_all(response.as_bytes())
+}
+
+fn render_exporter_metrics() -> String {
+    let mut out = String::new();
+    let now = Utc::now().timestamp();
+
+    out.push_str("# HELP claude_code_rate_limit_exporter_up Whether the Claude Code rate limit exporter could read the SQLite database.\n");
+    out.push_str("# TYPE claude_code_rate_limit_exporter_up gauge\n");
+    out.push_str("# HELP claude_code_rate_limit_used_percent Latest Claude Code usage limit percentage from statusline.\n");
+    out.push_str("# TYPE claude_code_rate_limit_used_percent gauge\n");
+    out.push_str("# HELP claude_code_rate_limit_recorded_at_seconds Unix timestamp for the latest statusline record.\n");
+    out.push_str("# TYPE claude_code_rate_limit_recorded_at_seconds gauge\n");
+    out.push_str("# HELP claude_code_rate_limit_resets_at_seconds Unix timestamp when the current Claude Code rate limit window resets.\n");
+    out.push_str("# TYPE claude_code_rate_limit_resets_at_seconds gauge\n");
+    out.push_str("# HELP claude_code_rate_limit_seconds_until_reset Seconds until the current Claude Code rate limit window resets.\n");
+    out.push_str("# TYPE claude_code_rate_limit_seconds_until_reset gauge\n");
+    out.push_str("# HELP claude_code_rate_limit_staleness_seconds Seconds since the latest statusline record.\n");
+    out.push_str("# TYPE claude_code_rate_limit_staleness_seconds gauge\n");
+    out.push_str("# HELP claude_code_rate_limit_records Number of records stored in the local statusline SQLite database.\n");
+    out.push_str("# TYPE claude_code_rate_limit_records gauge\n");
+
+    match read_latest_rate_limits() {
+        Ok(limits) => {
+            out.push_str("claude_code_rate_limit_exporter_up 1\n");
+            for limit in limits {
+                let window = limit.window;
+                let _ = writeln!(
+                    out,
+                    "claude_code_rate_limit_used_percent{{window=\"{window}\"}} {}",
+                    limit.used_pct
+                );
+                let _ = writeln!(
+                    out,
+                    "claude_code_rate_limit_records{{window=\"{window}\"}} {}",
+                    limit.records
+                );
+
+                if let Some(recorded_at) = limit.recorded_at_seconds {
+                    let _ = writeln!(
+                        out,
+                        "claude_code_rate_limit_recorded_at_seconds{{window=\"{window}\"}} {recorded_at}"
+                    );
+                    let _ = writeln!(
+                        out,
+                        "claude_code_rate_limit_staleness_seconds{{window=\"{window}\"}} {}",
+                        now.saturating_sub(recorded_at)
+                    );
+                }
+
+                if let Some(resets_at) = limit.resets_at {
+                    let _ = writeln!(
+                        out,
+                        "claude_code_rate_limit_resets_at_seconds{{window=\"{window}\"}} {resets_at}"
+                    );
+                    let _ = writeln!(
+                        out,
+                        "claude_code_rate_limit_seconds_until_reset{{window=\"{window}\"}} {}",
+                        resets_at.saturating_sub(now)
+                    );
+                }
+            }
+        }
+        Err(err) => {
+            let _ = writeln!(
+                out,
+                "# scrape_error: {}",
+                err.to_string().replace('\n', " ")
+            );
+            out.push_str("claude_code_rate_limit_exporter_up 0\n");
+        }
+    }
+
+    out
+}
+
+fn read_latest_rate_limits() -> Result<Vec<LatestRateLimit>, Box<dyn std::error::Error>> {
+    let db_path = exporter_db_path()?;
+    let conn = Connection::open_with_flags(db_path, OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+    conn.busy_timeout(StdDuration::from_millis(200))?;
+    let mut limits = Vec::new();
+
+    for window in RATE_LIMIT_WINDOWS {
+        let latest = conn
+            .query_row(
+                "SELECT recorded_at, used_pct, resets_at
+                 FROM rate_limits
+                 WHERE window = ?1
+                 ORDER BY recorded_at DESC
+                 LIMIT 1",
+                (window,),
+                |row| {
+                    let recorded_at: String = row.get(0)?;
+                    let used_pct: f64 = row.get(1)?;
+                    let resets_at: Option<i64> = row.get(2)?;
+                    Ok((recorded_at, used_pct, resets_at))
+                },
+            )
+            .optional()?;
+
+        let Some((recorded_at, used_pct, resets_at)) = latest else {
+            continue;
+        };
+
+        let records = conn.query_row(
+            "SELECT COUNT(*) FROM rate_limits WHERE window = ?1",
+            (window,),
+            |row| row.get(0),
+        )?;
+
+        limits.push(LatestRateLimit {
+            window,
+            recorded_at_seconds: parse_recorded_at(&recorded_at),
+            used_pct,
+            resets_at,
+            records,
+        });
+    }
+
+    Ok(limits)
+}
+
+fn exporter_db_path() -> Result<PathBuf, Box<dyn std::error::Error>> {
+    if let Ok(path) = env::var("CLAUDE_STATUSLINE_DB") {
+        return Ok(path.into());
+    }
+
+    let home = env::var("HOME")?;
+    Ok(PathBuf::from(home).join(".local/share/claude-statusline/rate_limits.db"))
+}
+
+fn parse_recorded_at(value: &str) -> Option<i64> {
+    DateTime::parse_from_rfc3339(value)
+        .map(|dt| dt.timestamp())
+        .ok()
 }
