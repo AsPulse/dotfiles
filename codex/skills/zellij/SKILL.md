@@ -11,6 +11,14 @@ description: Inspect and operate Zellij sessions from Codex. Use when the user a
 - Resolve the target pane to an explicit `pane_id`, for example `terminal_3`.
 - Only then send input or read output.
 - Never assume the currently focused pane is the intended target.
+- When the user asks to perform work through Zellij, a specific tab, or a
+  specific pane, do that work by sending input to that Zellij pane. Do not run
+  the same or equivalent work outside Zellij via `exec_command`, direct shell
+  commands, Kubernetes access, or another tool path unless the user explicitly
+  changes the execution path.
+- If Zellij access is blocked, stop and report the blocker instead of bypassing
+  the requested pane. Do not present work done outside Zellij as if it happened
+  in the requested pane.
 - Prefer interactive, step-by-step operation. Send one command or key sequence, read the pane output, then decide the next action, like a human using a terminal.
 - Do not paste a large batch of commands unless the user explicitly asks for batch execution or the command sequence is already known to be safe and non-interactive.
 - Zellij commands interact with a live terminal multiplexer outside the workspace sandbox. Run Zellij inspection, read, and write commands with `sandbox_permissions: "require_escalated"` and a concise `justification` asking to allow access to the live Zellij session.
