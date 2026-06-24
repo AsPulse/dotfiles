@@ -15,6 +15,7 @@ let
     "issue-create"
     "branch-create"
     "branch-rename"
+    "zellij"
   ];
   installSkill = name: ''
     mkdir -p ${lib.escapeShellArg "${codexSkillsDir}/${name}/agents"}

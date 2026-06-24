@@ -46,6 +46,7 @@
 
       in
       {
+        packages.zellij = pkgs.zellij;
 
         formatter = pkgs.writeShellApplication {
           name = "aspulse-dotfiles-formatter";

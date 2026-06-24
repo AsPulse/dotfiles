@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zellij"
+  short_description: "Operate Zellij panes from Codex safely"
+  default_prompt: "Use $zellij to inspect a Zellij session, resolve the target pane, and read or send pane input safely."
