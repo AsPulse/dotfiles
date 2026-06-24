@@ -1,7 +1,7 @@
 ---
 name: pr-create
 description: Create a pull request with an appropriate title, opening in browser
-allowed-tools: Bash, Read, Grep, Glob
+allowed-tools: Read, Grep, Glob
 argument-hint: "[base-branch]"
 ---
 

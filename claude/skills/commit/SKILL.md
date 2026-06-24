@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Commit changes with auto-generated message following project conventions
-allowed-tools: Bash, Read, Grep, Glob
+allowed-tools: Read, Grep, Glob
 argument-hint: "[instructions]"
 ---
 
