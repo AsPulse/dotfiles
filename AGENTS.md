@@ -30,10 +30,12 @@ public/
 | Task | Location |
 |------|----------|
 | Add a flake input | `flake.nix` `inputs` — also wire through `outputs` args |
+| Launch cursor-cli | zsh alias in `home/cursor.nix` (`nix run github:NixOS/nixpkgs/nixpkgs-unstable#cursor-cli`) |
 | Add a cross-platform system package | `desktop/configuration.nix` `environment.systemPackages` |
 | Add a darwin-only system option | `desktop/darwin.nix` |
 | Add a nixos-only system option | `desktop/linux.nix` |
 | Add a home-manager module | `home/<tool>.nix` + add to `home/home.nix` `imports` |
+| Add a Cursor skill | `cursor/skills/<name>/SKILL.md` + add name to `home/cursor.nix` `cursorSkillNames` |
 | Add a user package | `home/home.nix` `home.packages` (wrap darwin-only ones in `lib.optionals pkgs.stdenv.isDarwin [...]`) |
 | Place a config file | Relevant `home/*.nix` using `home.file."<path>".source` |
 | Edit CI | `.github/workflows/format.yaml` |
@@ -42,7 +44,8 @@ public/
 
 - `flake.nix` exports two module functions: `desktopModules` and `homeModules` — both take `system` via `eachDefaultSystem`
 - Overlays for neovim-nightly and lazygit are applied in `pkgs-module`, not `pkgs` (separate nixpkgs instance)
-- `allowUnfree = true` only on `pkgs-module`
+- `allowUnfree = true` on `pkgs-module` (cursor-cli is launched via `NIXPKGS_ALLOW_UNFREE=1 nix run`, not home.packages)
+- `cursor-cli` zsh alias in `home/cursor.nix` runs `nix run github:NixOS/nixpkgs/nixpkgs-unstable#cursor-cli --impure`
 - System-level modules fan out via `imports = lib.optionals pkgs.stdenv.is<os> [ ./<os>.nix ]` — options that exist only on one OS go in `darwin.nix` or `linux.nix`, not guarded by `mkIf` in shared modules
 - Formatter (`nix fmt`) runs both `nixfmt` and `stylua` in one script
 

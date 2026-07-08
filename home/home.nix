@@ -133,6 +133,7 @@ in
     ./cc-clip.nix
     ./claude.nix
     ./codex.nix
+    ./cursor.nix
   ];
 
   programs.home-manager.enable = true;
