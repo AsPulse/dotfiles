@@ -87,7 +87,6 @@ in
       yq
       imagemagick
       ghostscript
-      neofetch
       nkf
       jellyfin-ffmpeg
       act
