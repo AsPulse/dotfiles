@@ -131,6 +131,7 @@ in
     ./ha.nix
     ./lemonade.nix
     ./cc-clip.nix
+    ./open-macbook.nix
     ./claude.nix
     ./codex.nix
     ./cursor.nix
