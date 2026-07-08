@@ -29,6 +29,7 @@ in
   home.file.".claude/skills/issue-create/SKILL.md".source = ../claude/skills/issue-create/SKILL.md;
   home.file.".claude/skills/branch-create/SKILL.md".source = ../claude/skills/branch-create/SKILL.md;
   home.file.".claude/skills/branch-rename/SKILL.md".source = ../claude/skills/branch-rename/SKILL.md;
+  home.file.".claude/skills/zellij/SKILL.md".source = ../claude/skills/zellij/SKILL.md;
   home.file.".claude/hooks/gh-pr-create-guard.sh" = {
     source = ../claude/hooks/gh-pr-create-guard.sh;
     executable = true;
