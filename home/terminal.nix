@@ -1,12 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, herdr, ... }:
 let
   ghosttyPkg = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+  herdrPkg = herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
 
   home.packages = [
     ghosttyPkg
     pkgs.zellij
+    herdrPkg
   ];
 
   home.file.".terminfo".source = "${ghosttyPkg.terminfo}/share/terminfo";

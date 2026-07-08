@@ -3,6 +3,7 @@
   pkgs,
   opencode,
   claude-code-nix,
+  herdr,
   nix-index-database,
   ...
 }:
@@ -69,6 +70,10 @@ in
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
+
+  _module.args = {
+    inherit herdr;
+  };
 
   home.packages =
     (with pkgs; [

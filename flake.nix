@@ -9,6 +9,7 @@
     lazygit.url = "github:jesseduffield/lazygit";
     flake-utils.url = "github:numtide/flake-utils";
     opencode.url = "github:anomalyco/opencode";
+    herdr.url = "github:ogulcancelik/herdr/v0.7.3";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
   };
@@ -23,6 +24,7 @@
       lazygit,
       claude-code-nix,
       opencode,
+      herdr,
       nix-index-database,
       ...
     }:
@@ -111,6 +113,7 @@
               inherit
                 opencode
                 claude-code-nix
+                herdr
                 nix-index-database
                 ;
             }
