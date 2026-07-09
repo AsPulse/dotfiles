@@ -8,23 +8,23 @@
   ...
 }:
 let
-  codexVersion = "0.141.0";
+  codexVersion = "0.144.0";
   codexReleases = {
     x86_64-linux = {
       asset = "codex-package-x86_64-unknown-linux-musl.tar.gz";
-      hash = "sha256-CRyKLic3DEFAf6HLZH/pBb1P1w5GicE+/+4KLc4bKwc=";
+      hash = "sha256-awPS2JkQh0+lvie2F2Iddjj5BuiR/Yy0CvPSh2qKNv0=";
     };
     aarch64-linux = {
       asset = "codex-package-aarch64-unknown-linux-musl.tar.gz";
-      hash = "sha256-twAwM4WS3j42Hzzeg9Yk+IBh3zAKvjG2IHWlxaBYpvw=";
+      hash = "sha256-1YvgTm7oBIM8JbWGhp8fpn8n8L3D85EFoqm6zvFnrkI=";
     };
     x86_64-darwin = {
       asset = "codex-package-x86_64-apple-darwin.tar.gz";
-      hash = "sha256-tbsa+cgjMGtoLKjVwvGGENXww9Xb5GdLC18Y7s05hqc=";
+      hash = "sha256-EFbICViGOxPevV2u5et7m9b4YjahFx0hsAni3O6odj4=";
     };
     aarch64-darwin = {
       asset = "codex-package-aarch64-apple-darwin.tar.gz";
-      hash = "sha256-o38WiPabOLHO0FYIbSM+ZHhHQP4ZoqFeOtwcaCjhuTM=";
+      hash = "sha256-RYSiQ/+KZxJQvHFvicWlDtWZF6mDkKz9/6Psts/luzQ=";
     };
   };
   codexRelease = codexReleases.${pkgs.stdenv.hostPlatform.system};
