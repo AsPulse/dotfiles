@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  herdr,
   ...
 }:
 let
@@ -26,6 +27,15 @@ let
     install -m 0644 ${lib.escapeShellArg (toString ../codex/skills/${name}/agents/openai.yaml)} \
       ${lib.escapeShellArg "${codexSkillsDir}/${name}/agents/openai.yaml"}
   '';
+  externalSkills = {
+    "herdr" = "${herdr}/SKILL.md";
+  };
+  installExternalSkill = name: src: ''
+    rm -rf ${lib.escapeShellArg "${codexSkillsDir}/${name}"}
+    mkdir -p ${lib.escapeShellArg "${codexSkillsDir}/${name}"}
+    install -m 0644 ${lib.escapeShellArg (toString src)} \
+      ${lib.escapeShellArg "${codexSkillsDir}/${name}/SKILL.md"}
+  '';
 in
 {
   # Codex custom skills were not detected when home-manager exposed them as symlinks.
@@ -35,6 +45,15 @@ in
 
     mkdir -p ${lib.escapeShellArg codexSkillsDir}
     ${lib.concatStringsSep "\n" (map installSkill skillNames)}
+  '';
+
+  home.activation.installCodexExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    set -eu
+
+    mkdir -p ${lib.escapeShellArg codexSkillsDir}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: src: installExternalSkill name src) externalSkills
+    )}
   '';
 
   # Workaround for `codex remote-control`: the daemon currently insists on the

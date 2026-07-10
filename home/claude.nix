@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  herdr,
   ...
 }:
 let
@@ -20,6 +21,21 @@ let
     mkdir -p ${lib.escapeShellArg "${claudeSkillsDir}/${name}"}
     install -m 0644 ${lib.escapeShellArg (toString ../claude/skills/${name}/SKILL.md)} \
       ${lib.escapeShellArg "${claudeSkillsDir}/${name}/SKILL.md"}
+  '';
+  externalSkills = {
+    "herdr" = {
+      "SKILL.md" = "${herdr}/SKILL.md";
+    };
+  };
+  installExternalClaudeSkill = name: files: ''
+    rm -rf ${lib.escapeShellArg "${claudeSkillsDir}/${name}"}
+    mkdir -p ${lib.escapeShellArg "${claudeSkillsDir}/${name}"}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (file: src: ''
+        install -m 0644 ${lib.escapeShellArg (toString src)} \
+          ${lib.escapeShellArg "${claudeSkillsDir}/${name}/${file}"}
+      '') files
+    )}
   '';
   claude-statusline = pkgs.rustPlatform.buildRustPackage {
     pname = "claude-statusline";
@@ -52,6 +68,15 @@ in
 
     mkdir -p ${lib.escapeShellArg claudeSkillsDir}
     ${lib.concatStringsSep "\n" (map installClaudeSkill claudeSkillNames)}
+  '';
+
+  home.activation.installClaudeExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    set -eu
+
+    mkdir -p ${lib.escapeShellArg claudeSkillsDir}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: files: installExternalClaudeSkill name files) externalSkills
+    )}
   '';
 
   home.file.".claude/hooks/gh-pr-create-guard.sh" = {

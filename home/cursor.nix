@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  herdr,
   ...
 }:
 let
@@ -20,6 +21,21 @@ let
     install -m 0644 ${lib.escapeShellArg (toString ../cursor/skills/${name}/SKILL.md)} \
       ${lib.escapeShellArg "${cursorSkillsDir}/${name}/SKILL.md"}
   '';
+  externalCursorSkills = {
+    "herdr" = {
+      "SKILL.md" = "${herdr}/SKILL.md";
+    };
+  };
+  installExternalCursorSkill = name: files: ''
+    rm -rf ${lib.escapeShellArg "${cursorSkillsDir}/${name}"}
+    mkdir -p ${lib.escapeShellArg "${cursorSkillsDir}/${name}"}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (file: src: ''
+        install -m 0644 ${lib.escapeShellArg (toString src)} \
+          ${lib.escapeShellArg "${cursorSkillsDir}/${name}/${file}"}
+      '') files
+    )}
+  '';
 in
 {
   programs.zsh.shellAliases = {
@@ -33,5 +49,14 @@ in
 
     mkdir -p ${lib.escapeShellArg cursorSkillsDir}
     ${lib.concatStringsSep "\n" (map installCursorSkill cursorSkillNames)}
+  '';
+
+  home.activation.installCursorExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    set -eu
+
+    mkdir -p ${lib.escapeShellArg cursorSkillsDir}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: files: installExternalCursorSkill name files) externalCursorSkills
+    )}
   '';
 }
