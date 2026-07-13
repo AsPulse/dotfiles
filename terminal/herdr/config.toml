@@ -1,0 +1,13 @@
+[keys]
+previous_workspace = "alt+w"
+next_workspace = "alt+s"
+
+previous_agent = "alt+a"
+next_agent = "alt+d"
+
+switch_tab = ["prefix+1..9", "alt+1..9"]
+
+focus_pane_left = ["prefix+h", "alt+h"]
+focus_pane_down = ["prefix+j", "alt+j"]
+focus_pane_up = ["prefix+k", "alt+k"]
+focus_pane_right = ["prefix+l", "alt+l"]

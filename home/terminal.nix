@@ -26,6 +26,8 @@ in
 
   home.file.".config/starship.toml".source = ../terminal/starship/starship.toml;
 
+  home.file.".config/herdr/config.toml".source = ../terminal/herdr/config.toml;
+
   programs.zsh = {
     enable = true;
     autocd = false;
