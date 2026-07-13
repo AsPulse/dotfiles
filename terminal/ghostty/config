@@ -12,7 +12,7 @@ window-padding-x = 10
 window-padding-y = 10
 window-padding-balance = true
 
-macos-option-as-alt = left
+macos-option-as-alt = true
 
 keybind = alt+left=unbind
 keybind = alt+right=unbind
