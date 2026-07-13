@@ -13,7 +13,6 @@
     unzip
     nix-prefetch-github
     pkg-config
-    s3fs
     openssl.dev
     evcxr
     rclone

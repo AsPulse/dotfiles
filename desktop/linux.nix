@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  environment.systemPackages = with pkgs; [
+    s3fs
+  ];
+
   virtualisation.docker.enable = true;
   services.tailscale.enable = true;
 
