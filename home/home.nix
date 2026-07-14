@@ -143,7 +143,7 @@ in
   ];
 
   home.sessionVariables = {
-    EDITOR = "nvim";
+    EDITOR = "herdr-notepad";
     COLORTERM = "truecolor";
   };
 }

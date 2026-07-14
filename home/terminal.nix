@@ -1,7 +1,26 @@
-{ pkgs, herdr, ... }:
+{ lib, pkgs, herdr, ... }:
 let
   ghosttyPkg = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
   herdrPkg = herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  herdr-notepad = pkgs.rustPlatform.buildRustPackage {
+    pname = "herdr-notepad";
+    version = "0.1.0";
+    src = lib.cleanSourceWith {
+      src = ../terminal/herdr-notepad;
+      filter =
+        path: _type:
+        let
+          base = baseNameOf path;
+        in
+        base != "target" && base != ".gitignore";
+    };
+    cargoLock.lockFile = ../terminal/herdr-notepad/Cargo.lock;
+    doCheck = false;
+    env = {
+      HERDR_BIN = lib.getExe herdrPkg;
+      NVIM_BIN = lib.getExe pkgs.neovim;
+    };
+  };
 in
 {
 
@@ -9,6 +28,7 @@ in
     ghosttyPkg
     pkgs.zellij
     herdrPkg
+    herdr-notepad
   ];
 
   home.file.".terminfo".source = "${ghosttyPkg.terminfo}/share/terminfo";
