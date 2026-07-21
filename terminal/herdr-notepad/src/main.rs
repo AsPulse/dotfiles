@@ -424,22 +424,41 @@ fn wait_for_status(
     pane_id: &str,
     terminate: &AtomicBool,
 ) -> Result<i32, String> {
+    wait_for_status_with(status_file, terminate, || pane_exists(herdr, pane_id))
+}
+
+fn wait_for_status_with(
+    status_file: &Path,
+    terminate: &AtomicBool,
+    mut pane_exists: impl FnMut() -> bool,
+) -> Result<i32, String> {
     loop {
         if terminate.load(Ordering::SeqCst) {
             return Err("interrupted".into());
         }
 
-        if status_file.exists() {
-            let contents = fs::read_to_string(status_file)
-                .map_err(|err| format!("failed to read exit status: {err}"))?;
-            return parse_status(&contents);
+        if let Some(code) = read_status_if_present(status_file)? {
+            return Ok(code);
         }
 
-        if !pane_exists(herdr, pane_id) {
+        if !pane_exists() {
+            // The child commits status before exiting. Re-check after observing
+            // pane closure in case completion happened during the pane query.
+            if let Some(code) = read_status_if_present(status_file)? {
+                return Ok(code);
+            }
             return Err("editor pane closed before exit status arrived".into());
         }
 
         thread::sleep(STATUS_POLL);
+    }
+}
+
+fn read_status_if_present(status_file: &Path) -> Result<Option<i32>, String> {
+    match fs::read_to_string(status_file) {
+        Ok(contents) => parse_status(&contents).map(Some),
+        Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(None),
+        Err(err) => Err(format!("failed to read exit status: {err}")),
     }
 }
 
@@ -543,5 +562,39 @@ fn exit_code_from_i32(code: i32) -> ExitCode {
         ExitCode::from(code as u8)
     } else {
         ExitCode::FAILURE
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn accepts_status_written_while_pane_disappears() {
+        let tmp_dir = tempfile::tempdir().unwrap();
+        let status_file = tmp_dir.path().join("status");
+        let terminate = AtomicBool::new(false);
+        let mut pane_checked = false;
+
+        let code = wait_for_status_with(&status_file, &terminate, || {
+            pane_checked = true;
+            write_status(status_file.to_str().unwrap(), 0).unwrap();
+            false
+        })
+        .unwrap();
+
+        assert_eq!(code, 0);
+        assert!(pane_checked);
+    }
+
+    #[test]
+    fn errors_when_pane_disappears_without_status() {
+        let tmp_dir = tempfile::tempdir().unwrap();
+        let status_file = tmp_dir.path().join("status");
+        let terminate = AtomicBool::new(false);
+
+        let err = wait_for_status_with(&status_file, &terminate, || false).unwrap_err();
+
+        assert_eq!(err, "editor pane closed before exit status arrived");
     }
 }
