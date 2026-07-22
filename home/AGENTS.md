@@ -25,7 +25,7 @@ One `.nix` file per tool/domain. Each is imported by `home.nix`.
 | `typst.nix` | Typst | typst + typstfmt + tinymist LSP |
 | `kubernetes.nix` | K8s | kubectl, helm, krew, kubie config placement |
 | `direnv.nix` | direnv | direnv + nix-direnv integration |
-| `ime.nix` | IME | macSKK kana-rule via `home.activation` (TCC workaround) |
+| `ime.nix` | IME | macSKK kana-rule via `home.activation` (TCC workaround) + key bindings via `defaults write` |
 | `pinentry-touchid/` | GPG | Custom pinentry derivation for Touch ID on macOS |
 
 ## CONVENTIONS
