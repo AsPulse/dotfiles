@@ -27,6 +27,10 @@ in
         "$(cat ${lib.escapeShellArg (toString ../ime/macskk-keybindings.plist)})"
       /usr/bin/defaults write net.mtgto.inputmethod.macSKK selectedKeyBindingSetId \
         -string "macSKK *"
+      # 補完への変換候補表示 (デフォルト有効) はピリオド確定・ホーム段キーでの
+      # 候補選択を伴い、大西配列では . や a-l がかな打鍵と衝突するため無効にする
+      /usr/bin/defaults write net.mtgto.inputmethod.macSKK showCandidateForCompletion \
+        -bool false
       /usr/bin/killall macSKK || true
     ''
   );
