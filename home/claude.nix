@@ -37,11 +37,22 @@ let
       '') files
     )}
   '';
+  # フィルタ後の内容でコンテンツアドレスされた src にすることで、
+  # リポジトリ内の無関係な変更による再ビルドを防ぐ
+  claude-statusline-src = lib.cleanSourceWith {
+    src = ../claude/statusline;
+    filter =
+      path: _type:
+      let
+        base = baseNameOf path;
+      in
+      base != "target" && base != ".gitignore" && base != "plot.py" && base != "CLAUDE.md";
+  };
   claude-statusline = pkgs.rustPlatform.buildRustPackage {
     pname = "claude-statusline";
     version = "0.1.0";
-    src = ../claude/statusline;
-    cargoLock.lockFile = ../claude/statusline/Cargo.lock;
+    src = claude-statusline-src;
+    cargoLock.lockFile = claude-statusline-src + "/Cargo.lock";
   };
   plotPython = pkgs.python3.withPackages (
     ps: with ps; [
