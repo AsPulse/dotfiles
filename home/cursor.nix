@@ -1,7 +1,9 @@
 {
   config,
   lib,
+  pkgs,
   herdr,
+  llm-agents,
   ...
 }:
 let
@@ -38,9 +40,26 @@ let
   '';
 in
 {
-  programs.zsh.shellAliases = {
-    cursor-cli = "NIXPKGS_ALLOW_UNFREE=1 nix run github:NixOS/nixpkgs/nixpkgs-unstable#cursor-cli --impure";
-  };
+  # nixpkgs の cursor-cli は更新が遅れがちなので、毎日 upstream に追従している
+  # numtide/llm-agents.nix のパッケージを使う。
+  # 自己アップデータを放置すると ~/.local/bin に NixOS では動かない汎用 Linux 用
+  # バイナリを書き戻して PATH 上で Nix 版を隠してしまうため、常に
+  # --disable-auto-update を付けて無効化する（環境変数や設定ファイルでの
+  # 無効化手段は現状存在しない）。
+  home.packages =
+    let
+      cursorAgent = llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.cursor-agent;
+    in
+    [
+      (pkgs.symlinkJoin {
+        name = "cursor-agent-no-auto-update";
+        paths = [ cursorAgent ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/cursor-agent --add-flags --disable-auto-update
+        '';
+      })
+    ];
 
   # Cursor skills were not detected reliably when home-manager exposed them as
   # symlinks. Place real files in ~/.cursor/skills so Cursor can discover them.

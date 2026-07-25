@@ -12,6 +12,7 @@
     herdr.url = "github:ogulcancelik/herdr/v0.7.3";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
@@ -26,6 +27,7 @@
       opencode,
       herdr,
       nix-index-database,
+      llm-agents,
       ...
     }:
     let
@@ -115,6 +117,7 @@
                 claude-code-nix
                 herdr
                 nix-index-database
+                llm-agents
                 ;
             }
           );

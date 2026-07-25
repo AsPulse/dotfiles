@@ -5,6 +5,7 @@
   claude-code-nix,
   herdr,
   nix-index-database,
+  llm-agents,
   ...
 }:
 let
@@ -72,7 +73,7 @@ in
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
   _module.args = {
-    inherit herdr;
+    inherit herdr llm-agents;
   };
 
   home.packages =
