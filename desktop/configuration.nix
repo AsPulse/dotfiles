@@ -1,8 +1,10 @@
 { lib, pkgs, ... }:
 {
-  imports =
-    lib.optionals pkgs.stdenv.isDarwin [ ./darwin.nix ]
-    ++ lib.optionals pkgs.stdenv.isLinux [ ./linux.nix ];
+  imports = [
+    ./codex-mcp.nix
+  ]
+  ++ lib.optionals pkgs.stdenv.isDarwin [ ./darwin.nix ]
+  ++ lib.optionals pkgs.stdenv.isLinux [ ./linux.nix ];
 
   environment.systemPackages = with pkgs; [
     git

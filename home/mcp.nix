@@ -25,17 +25,6 @@ let
       { inherit (server) url; }
     else
       { inherit (server) command; } // lib.optionalAttrs (server.args != [ ]) { inherit (server) args; };
-
-  codexAddCommand =
-    name: server:
-    let
-      target =
-        if server.type == "http" then
-          "--url ${lib.escapeShellArg server.url}"
-        else
-          "-- ${lib.escapeShellArg server.command} ${lib.escapeShellArgs server.args}";
-    in
-    "${config.home.profileDirectory}/bin/codex mcp add ${lib.escapeShellArg name} ${target}";
 in
 {
   options.aspulse.mcpServers = lib.mkOption {
@@ -96,13 +85,9 @@ in
       mv "$tmp" "$claude_json"
     '';
 
-    # Codex の config.toml は Codex 自身が [tui.*] や [hooks.state] を書き戻すため
-    # home.file では管理できない。同名なら上書きされる codex mcp add で冪等に投入する。
-    home.activation.installCodexMcpServers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      set -eu
-
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList codexAddCommand cfg)}
-    '';
+    # Codex 分はここでは配らない。config.toml は Codex 自身が書き戻す状態ファイルなので、
+    # 優先度が一段低い system レイヤ (/etc/codex/config.toml) を Nix が所有する形にしてある。
+    # desktop/codex-mcp.nix を参照。
 
     # cursor-agent は ~/.cursor/mcp.json だけを見る。skills と違い symlink でも読めるため
     # home.file でそのまま生成してよい。
