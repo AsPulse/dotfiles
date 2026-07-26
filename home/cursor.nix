@@ -3,6 +3,7 @@
   lib,
   pkgs,
   herdr,
+  tellur,
   llm-agents,
   ...
 }:
@@ -26,6 +27,10 @@ let
   externalCursorSkills = {
     "herdr" = {
       "SKILL.md" = "${herdr}/SKILL.md";
+    };
+    "tellur-authoring" = {
+      "SKILL.md" = "${tellur}/skills/tellur-authoring/SKILL.md";
+      "SKILL.ja.md" = "${tellur}/skills/tellur-authoring/SKILL.ja.md";
     };
   };
   installExternalCursorSkill = name: files: ''

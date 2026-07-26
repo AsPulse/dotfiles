@@ -469,7 +469,8 @@
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_7",
         "nixpkgs-module": "nixpkgs-module",
-        "opencode": "opencode"
+        "opencode": "opencode",
+        "tellur": "tellur"
       }
     },
     "systems": {
@@ -529,6 +530,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tellur": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784465869,
+        "narHash": "sha256-nV77fjuEkblxe24sjs50CxSCEN6DuhJRPYX/quoLCDI=",
+        "owner": "comnipl",
+        "repo": "tellur",
+        "rev": "f4f12ef117bbada7501b76592436da1fd379e262",
+        "type": "github"
+      },
+      "original": {
+        "owner": "comnipl",
+        "repo": "tellur",
         "type": "github"
       }
     },

@@ -2,6 +2,7 @@
   config,
   lib,
   herdr,
+  tellur,
   ...
 }:
 let
@@ -28,13 +29,23 @@ let
       ${lib.escapeShellArg "${codexSkillsDir}/${name}/agents/openai.yaml"}
   '';
   externalSkills = {
-    "herdr" = "${herdr}/SKILL.md";
+    "herdr" = {
+      "SKILL.md" = "${herdr}/SKILL.md";
+    };
+    "tellur-authoring" = {
+      "SKILL.md" = "${tellur}/skills/tellur-authoring/SKILL.md";
+      "SKILL.ja.md" = "${tellur}/skills/tellur-authoring/SKILL.ja.md";
+    };
   };
-  installExternalSkill = name: src: ''
+  installExternalSkill = name: files: ''
     rm -rf ${lib.escapeShellArg "${codexSkillsDir}/${name}"}
     mkdir -p ${lib.escapeShellArg "${codexSkillsDir}/${name}"}
-    install -m 0644 ${lib.escapeShellArg (toString src)} \
-      ${lib.escapeShellArg "${codexSkillsDir}/${name}/SKILL.md"}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (file: src: ''
+        install -m 0644 ${lib.escapeShellArg (toString src)} \
+          ${lib.escapeShellArg "${codexSkillsDir}/${name}/${file}"}
+      '') files
+    )}
   '';
 in
 {
@@ -52,7 +63,7 @@ in
 
     mkdir -p ${lib.escapeShellArg codexSkillsDir}
     ${lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (name: src: installExternalSkill name src) externalSkills
+      lib.mapAttrsToList (name: files: installExternalSkill name files) externalSkills
     )}
   '';
 

@@ -10,6 +10,9 @@
     flake-utils.url = "github:numtide/flake-utils";
     opencode.url = "github:anomalyco/opencode";
     herdr.url = "github:ogulcancelik/herdr/v0.7.3";
+    # skills/tellur-authoring を取り込むためだけの入力なので flake としては評価しない。
+    tellur.url = "github:comnipl/tellur";
+    tellur.flake = false;
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -26,6 +29,7 @@
       claude-code-nix,
       opencode,
       herdr,
+      tellur,
       nix-index-database,
       llm-agents,
       ...
@@ -116,6 +120,7 @@
                 opencode
                 claude-code-nix
                 herdr
+                tellur
                 nix-index-database
                 llm-agents
                 ;

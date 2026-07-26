@@ -3,6 +3,7 @@
   lib,
   pkgs,
   herdr,
+  tellur,
   ...
 }:
 let
@@ -25,6 +26,10 @@ let
   externalSkills = {
     "herdr" = {
       "SKILL.md" = "${herdr}/SKILL.md";
+    };
+    "tellur-authoring" = {
+      "SKILL.md" = "${tellur}/skills/tellur-authoring/SKILL.md";
+      "SKILL.ja.md" = "${tellur}/skills/tellur-authoring/SKILL.ja.md";
     };
   };
   installExternalClaudeSkill = name: files: ''

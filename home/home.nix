@@ -4,6 +4,7 @@
   opencode,
   claude-code-nix,
   herdr,
+  tellur,
   nix-index-database,
   llm-agents,
   ...
@@ -73,7 +74,7 @@ in
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
   _module.args = {
-    inherit herdr llm-agents;
+    inherit herdr tellur llm-agents;
   };
 
   home.packages =
