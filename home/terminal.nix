@@ -1,4 +1,9 @@
-{ lib, pkgs, herdr, ... }:
+{
+  lib,
+  pkgs,
+  herdr,
+  ...
+}:
 let
   ghosttyPkg = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
   herdrPkg = herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;

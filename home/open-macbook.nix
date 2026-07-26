@@ -1,15 +1,16 @@
 { pkgs, lib, ... }:
 let
-  scriptText = lib.replaceStrings
-    [
-      "@rsync@"
-      "@ssh@"
-    ]
-    [
-      "${pkgs.rsync}/bin/rsync"
-      "${pkgs.openssh}/bin/ssh"
-    ]
-    (builtins.readFile ../scripts/open-macbook.sh);
+  scriptText =
+    lib.replaceStrings
+      [
+        "@rsync@"
+        "@ssh@"
+      ]
+      [
+        "${pkgs.rsync}/bin/rsync"
+        "${pkgs.openssh}/bin/ssh"
+      ]
+      (builtins.readFile ../scripts/open-macbook.sh);
   openMacbook = pkgs.writeShellScriptBin "OpenMacbook" scriptText;
 in
 {
