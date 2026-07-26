@@ -136,6 +136,8 @@ in
     ./claude.nix
     ./codex.nix
     ./cursor.nix
+    ./mcp.nix
+    ./mcp-context7.nix
   ];
 
   programs.home-manager.enable = true;
