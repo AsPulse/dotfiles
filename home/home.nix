@@ -138,6 +138,7 @@ in
     ./cursor.nix
     ./mcp.nix
     ./mcp-context7.nix
+    ./blender-mcp.nix
   ];
 
   programs.home-manager.enable = true;
