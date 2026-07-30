@@ -17,6 +17,7 @@ let
     "branch-create"
     "branch-rename"
     "zellij"
+    "blender"
   ];
   installCursorSkill = name: ''
     mkdir -p ${lib.escapeShellArg "${cursorSkillsDir}/${name}"}

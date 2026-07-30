@@ -18,6 +18,7 @@ let
     "branch-create"
     "branch-rename"
     "zellij"
+    "blender"
   ];
   installSkill = name: ''
     mkdir -p ${lib.escapeShellArg "${codexSkillsDir}/${name}/agents"}

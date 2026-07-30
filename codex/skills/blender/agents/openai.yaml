@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blender"
+  short_description: "Drive Blender instances with blender-cli"
+  default_prompt: "Use $blender to resolve a Blender instance port with blender-cli, then inspect or edit the scene through it."

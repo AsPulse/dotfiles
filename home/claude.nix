@@ -16,6 +16,7 @@ let
     "branch-create"
     "branch-rename"
     "zellij"
+    "blender"
   ];
   installClaudeSkill = name: ''
     rm -rf ${lib.escapeShellArg "${claudeSkillsDir}/${name}"}
