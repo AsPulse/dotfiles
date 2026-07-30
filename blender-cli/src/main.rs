@@ -70,12 +70,17 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Bring an instance's sway workspace to the front, so Moonlight shows it
+    Show {
+        #[arg(long)]
+        port: u16,
+    },
     /// List running instances
     Ls {
         #[arg(long)]
         json: bool,
     },
-    /// Ask an instance to quit
+    /// Stop an instance by signalling the process recorded when it was spawned
     Kill {
         #[arg(long, conflicts_with = "all")]
         port: Option<u16>,
@@ -114,6 +119,12 @@ fn run() -> Res<()> {
             file,
             json,
         } => exec(port, read_source(code, file)?, json),
+        Cmd::Show { port } => {
+            if !alive(port) {
+                return Err(format!("nothing is listening on port {port}").into());
+            }
+            switch_workspace(workspace_for(port))
+        }
         Cmd::Ls { json } => list(json),
         Cmd::Kill { port, all } => kill(port, all),
         Cmd::DocsPath => {
@@ -285,8 +296,9 @@ fn running_ports() -> Vec<u16> {
 fn start(port: u16, workspace: Option<u32>) -> Res<()> {
     prepare_config(port)?;
     // New windows open on whichever workspace has focus, so switching first is
-    // what actually places the instance. Failing here only costs us the placement.
-    switch_workspace(workspace.unwrap_or_else(|| workspace_for(port)));
+    // what actually places the instance. Failing here only costs us the placement,
+    // so it must not abort the launch.
+    let _ = switch_workspace(workspace.unwrap_or_else(|| workspace_for(port)));
 
     let blender = env_path("BLENDER_CLI_BLENDER")?;
     let mut cmd = Command::new(&blender);
@@ -381,10 +393,9 @@ fn run_command(cmd: &mut Command) -> Res<()> {
     Ok(())
 }
 
-fn switch_workspace(ws: u32) {
-    let Some(swaymsg) = std::env::var_os("BLENDER_CLI_SWAYMSG") else {
-        return;
-    };
+fn switch_workspace(ws: u32) -> Res<()> {
+    let swaymsg = std::env::var_os("BLENDER_CLI_SWAYMSG")
+        .ok_or("BLENDER_CLI_SWAYMSG is not set; blender-cli expects its Nix wrapper")?;
     let mut cmd = Command::new(swaymsg);
     cmd.args(["workspace", "number", &ws.to_string()])
         .stdin(Stdio::null())
@@ -393,7 +404,10 @@ fn switch_workspace(ws: u32) {
     if let Some(sock) = sway_socket(&runtime_dir()) {
         cmd.env("SWAYSOCK", sock);
     }
-    let _ = cmd.status();
+    match cmd.status()? {
+        s if s.success() => Ok(()),
+        s => Err(format!("swaymsg exited with {s}").into()),
+    }
 }
 
 // --- paths -------------------------------------------------------------------

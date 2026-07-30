@@ -21,6 +21,10 @@ blender-cli ls
 - A specific one → `blender-cli ensure --port 9876` starts it only if that port is idle.
 - `blender-cli kill --port N` (or `--all`) shuts instances down.
 
+Only one instance is visible over Moonlight at a time, because each sits on its
+own sway workspace. `blender-cli show --port N` brings one to the front — use it
+before asking the user to look at something.
+
 Each instance has its own config directory, its own open .blend, and its own sway
 workspace, so instances never share state.
 
