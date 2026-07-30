@@ -24,6 +24,10 @@ blender-cli ls
 Each instance has its own config directory, its own open .blend, and its own sway
 workspace, so instances never share state.
 
+Only instances started through `blender-cli` are tracked. A Blender launched by
+hand will not appear in `ls` and cannot be stopped by `kill` — the add-on offers
+no way to quit over the socket, so `kill` signals the process recorded at spawn.
+
 ## Run code
 
 ```

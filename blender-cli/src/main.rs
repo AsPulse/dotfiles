@@ -198,17 +198,7 @@ fn exec(port: u16, code: String, json: bool) -> Res<()> {
 }
 
 fn list(json: bool) -> Res<()> {
-    let mut ports: Vec<u16> = Vec::new();
-    if let Ok(entries) = fs::read_dir(state_root()) {
-        for e in entries.flatten() {
-            if let Some(p) = e.file_name().to_str().and_then(|s| s.parse::<u16>().ok())
-                && alive(p)
-            {
-                ports.push(p);
-            }
-        }
-    }
-    ports.sort_unstable();
+    let ports = running_ports();
 
     if json {
         let rows: Vec<_> = ports
@@ -230,17 +220,64 @@ fn list(json: bool) -> Res<()> {
 fn kill(port: Option<u16>, all: bool) -> Res<()> {
     let targets: Vec<u16> = match (port, all) {
         (Some(p), _) => vec![p],
-        (None, true) => (PORT_BASE..=PORT_LAST).filter(|p| alive(*p)).collect(),
+        (None, true) => running_ports(),
         (None, false) => return Err("pass --port or --all".into()),
     };
+    if targets.is_empty() {
+        eprintln!("no running instances");
+        return Ok(());
+    }
+
+    let mut failed = false;
     for p in targets {
-        // `wm.quit_blender` is blocked by the add-on's sandbox; `bpy.app.quit()` is
-        // the sanctioned path. The socket dies with the process, so a missing or
-        // truncated reply is the expected outcome rather than a failure.
-        let _ = send(p, "import bpy\nbpy.app.quit()", Duration::from_secs(10));
-        println!("{p}");
+        match terminate(p) {
+            Ok(()) => println!("{p}"),
+            Err(e) => {
+                eprintln!("blender-cli: port {p}: {e}");
+                failed = true;
+            }
+        }
+    }
+    if failed {
+        return Err("some instances could not be stopped".into());
     }
     Ok(())
+}
+
+/// Signal the process recorded at spawn time.
+///
+/// The socket cannot be used to shut an instance down: the add-on's weak sandbox
+/// refuses `bpy.ops.wm.quit_blender()`, and the `bpy.app.quit()` its refusal message
+/// points at does not exist in Blender 5.1 — `hasattr(bpy.app, "quit")` is False and
+/// it appears nowhere in the API reference. So the pid file is the only handle we have.
+fn terminate(port: u16) -> Res<()> {
+    let path = pid_file(port);
+    let pid: i32 = fs::read_to_string(&path)
+        .map_err(|_| "not started by blender-cli, so no pid was recorded")?
+        .trim()
+        .parse()?;
+
+    // SIGTERM rather than SIGKILL so Blender tears its window down properly.
+    if unsafe { libc::kill(pid, libc::SIGTERM) } != 0 {
+        return Err(std::io::Error::last_os_error().into());
+    }
+    let _ = fs::remove_file(&path);
+    Ok(())
+}
+
+fn running_ports() -> Vec<u16> {
+    let mut ports = Vec::new();
+    if let Ok(entries) = fs::read_dir(state_root()) {
+        for entry in entries.flatten() {
+            if let Some(p) = entry.file_name().to_str().and_then(|s| s.parse::<u16>().ok())
+                && alive(p)
+            {
+                ports.push(p);
+            }
+        }
+    }
+    ports.sort_unstable();
+    ports
 }
 
 // --- launching ---------------------------------------------------------------
@@ -273,8 +310,11 @@ fn start(port: u16, workspace: Option<u32>) -> Res<()> {
             .env("XDG_SESSION_TYPE", "wayland");
     }
 
-    cmd.spawn()
+    let child = cmd
+        .spawn()
         .map_err(|e| format!("failed to launch {}: {e}", blender.display()))?;
+    // `kill` has no other handle on the process — see `terminate`.
+    let _ = fs::write(pid_file(port), child.id().to_string());
 
     let deadline = Instant::now() + SPAWN_TIMEOUT;
     while Instant::now() < deadline {
@@ -423,6 +463,10 @@ fn state_root() -> PathBuf {
 
 fn config_dir(port: u16) -> PathBuf {
     state_root().join(port.to_string()).join("config")
+}
+
+fn pid_file(port: u16) -> PathBuf {
+    state_root().join(port.to_string()).join("pid")
 }
 
 fn env_path(key: &str) -> Res<PathBuf> {
