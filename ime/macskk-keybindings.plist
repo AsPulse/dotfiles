@@ -74,7 +74,7 @@
 				<array>
 					<dict>
 						<key>key</key>
-						<string>w</string>
+						<string>l</string>
 						<key>modifierFlags</key>
 						<integer>0</integer>
 						<key>optionalModifierFlags</key>
@@ -98,16 +98,7 @@
 				<key>action</key>
 				<string>directAbbrev</string>
 				<key>inputs</key>
-				<array>
-					<dict>
-						<key>key</key>
-						<string>;</string>
-						<key>modifierFlags</key>
-						<integer>262144</integer>
-						<key>optionalModifierFlags</key>
-						<integer>0</integer>
-					</dict>
-				</array>
+				<array/>
 			</dict>
 			<dict>
 				<key>action</key>
