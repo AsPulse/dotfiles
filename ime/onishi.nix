@@ -1,19 +1,10 @@
 { pkgs }:
-let
-  convert =
-    name: format:
-    pkgs.runCommand name { } ''
-      DENO_DIR=$TMPDIR ${pkgs.deno}/bin/deno run --allow-read \
-        ${./convert-onishi.ts} ${format} ${./kana-rule.conf} > $out
-    '';
-in
 {
-  # macSKK はかなルールと Shift 記号の変換開始ルールを 1 ファイルで読む
-  macskk = pkgs.runCommand "kana-rule-onishi-macskk.conf" { } ''
-    cat ${convert "kana-rule-onishi.conf" "macskk"} ${./kana-rule.onishi-macskk.conf} > $out
-  '';
-
   # skkeleton のテーブルファイルパーサは &comma; を解釈できず、入力側に
-  # カンマを含む「ま行」を表現できないため JSON で register_kanatable に渡す
-  skkeletonJson = convert "kana-rule-onishi.json" "json";
+  # カンマを含むルールを表現できないため JSON で register_kanatable に渡す。
+  # macSKK は kana-rule.conf をそのまま読めるので変換しない。
+  skkeletonJson = pkgs.runCommand "kana-rule-onishi.json" { } ''
+    DENO_DIR=$TMPDIR ${pkgs.deno}/bin/deno run --allow-read \
+      ${./kana-rule-to-json.ts} ${./kana-rule.conf} > $out
+  '';
 }

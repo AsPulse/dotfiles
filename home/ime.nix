@@ -6,7 +6,6 @@
 }:
 let
   macSkkSettingsDir = "${config.home.homeDirectory}/Library/Containers/net.mtgto.inputmethod.macSKK/Data/Documents/Settings";
-  onishi = import ../ime/onishi.nix { inherit pkgs; };
 in
 {
   # macSKKがnix storeにある設定ファイルを読もうとしてもTCCでブロックされてしまうため、
@@ -17,7 +16,7 @@ in
 
       mkdir -p ${lib.escapeShellArg macSkkSettingsDir}
 
-      install -m 0644 ${lib.escapeShellArg (toString onishi.macskk)} \
+      install -m 0644 ${lib.escapeShellArg (toString ../ime/kana-rule.conf)} \
         ${lib.escapeShellArg "${macSkkSettingsDir}/kana-rule.conf"}
 
       # キーバインドは UserDefaults 管理のため defaults write で宣言的に上書きする。
