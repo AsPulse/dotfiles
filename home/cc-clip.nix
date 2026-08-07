@@ -182,9 +182,13 @@ in
     };
   };
 
-  home.sessionPath = lib.optionals pkgs.stdenv.isLinux [
-    "$HOME/.local/bin"
-  ];
+  # home.sessionPath は PATH の先頭に追加するため、自己アップデータを持つツールが
+  # ~/.local/bin に書き戻した汎用 Linux 向けバイナリが Nix 版を隠してしまう
+  # （cursor-agent で実際に発生し、NixOS で起動不能になった）。この shim は PATH 上に
+  # 見つかりさえすればよいので、sessionPath ではなく末尾へ追加して Nix 側を常に優先させる。
+  home.sessionVariablesExtra = lib.optionalString pkgs.stdenv.isLinux ''
+    export PATH="''${PATH:+''${PATH}:}$HOME/.local/bin"
+  '';
 
   launchd.agents.cc-clip = lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;

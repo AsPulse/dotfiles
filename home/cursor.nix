@@ -52,6 +52,9 @@ in
   # バイナリを書き戻して PATH 上で Nix 版を隠してしまうため、常に
   # --disable-auto-update を付けて無効化する（環境変数や設定ファイルでの
   # 無効化手段は現状存在しない）。
+  # ただしこのフラグは万全ではなく、2026-08-06 に実際にすり抜けて書き戻しが起きた。
+  # 保険として cc-clip.nix 側で ~/.local/bin を PATH 末尾に置き、書き戻されても
+  # Nix 版が勝つようにしてある。
   home.packages =
     let
       cursorAgent = llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.cursor-agent;
