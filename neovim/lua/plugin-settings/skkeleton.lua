@@ -32,6 +32,11 @@ return {
         globalDictionaries = {
           '~/.skk/SKK-JISYO.L',
         },
+        -- ん は大西配列で ; の位置にあり Shift しても大文字にならないため、
+        -- : を ; のシフト入力と見做して送り仮名を開始できるようにする (US 配列)
+        lowercaseMap = {
+          [':'] = ';',
+        },
         userDictionary = '~/.skk/skkeleton.txt',
       })
       vim.keymap.set({ 'i', 't' }, '<C-j>', '<Plug>(skkeleton-enable)', { remap = true })

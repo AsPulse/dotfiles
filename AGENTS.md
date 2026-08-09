@@ -17,7 +17,7 @@ public/
 ├── terminal/          # ghostty, starship, kubie raw config files
 ├── tsnip/             # Deno-based TypeScript snippet definitions for tsnip.nvim
 ├── lazygit/           # lazygit config.yml (placed via home.file in git.nix)
-├── ime/               # kana-rule.conf is the kana table in letter space; the Onishi layout itself lives in the keyboard firmware (conductor-keymap.json, outside this repo), so macSKK reads kana-rule.conf as-is (placed via home.activation on Darwin) and onishi.nix runs kana-rule-to-json.ts to build the skkeleton JSON table. macskk-keybindings.plist declares macSKK key bindings (written to UserDefaults via defaults write in ime.nix)
+├── ime/               # kana-rule.conf is the kana table in letter space; the Onishi layout itself lives in the keyboard firmware (conductor-keymap.json, outside this repo), so onishi.nix only appends kana-rule.onishi-macskk.conf (the ん shift rule) for macSKK (placed via home.activation on Darwin) and runs kana-rule-to-json.ts to build the skkeleton JSON table. macskk-keybindings.plist declares macSKK key bindings (written to UserDefaults via defaults write in ime.nix)
 ├── latex/             # Custom .sty files (placed via home.file in latex.nix)
 ├── zellij_layouts/    # Zellij .kdl layout files
 ├── .github/           # CI workflows (format checks) + Renovate config
