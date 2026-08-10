@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   opencode,
@@ -10,6 +11,8 @@
   ...
 }:
 let
+  profiles = config.aspulse.profiles;
+
   codexVersion = "0.144.0";
   codexReleases = {
     x86_64-linux = {
@@ -78,40 +81,49 @@ in
   };
 
   home.packages =
+    # どのホストでも読む・探す・見るのに要るもの。
     (with pkgs; [
       bat
       eza
       ripgrep
       fzf
       fd
-      dust
-      jq
-      yq
-      imagemagick
-      ghostscript
-      nkf
-      jellyfin-ffmpeg
-      act
-      process-compose
-      google-cloud-sdk
-      cilium-cli
-      mongosh
-      mongodb-tools
-      subversion
-      ngrok
-      cloudflared
+    ])
+    ++ lib.optionals profiles.workstation.enable (
+      with pkgs;
+      [
+        dust
+        jq
+        yq
+        imagemagick
+        ghostscript
+        nkf
+        jellyfin-ffmpeg
+        act
+        process-compose
+        google-cloud-sdk
+        cilium-cli
+        mongosh
+        mongodb-tools
+        subversion
+        ngrok
+        cloudflared
+      ]
+    )
+    ++ lib.optionals profiles.agents.enable [
       claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
       codexPackage
       # opencode's Linux build is currently broken upstream (fixed-output hash
       # mismatch for node_modules). Disabled for now.
       # opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-    ])
+    ]
     ++ lib.optionals pkgs.stdenv.isDarwin [
       pkgs.skimpdf
     ];
 
   imports = [
     nix-index-database.homeModules.nix-index
+    ./profiles.nix
     ./comma.nix
     ./terminal.nix
     ./opencode.nix
@@ -131,7 +143,6 @@ in
     ./mosh.nix
     ./ha.nix
     ./lemonade.nix
-    ./cc-clip.nix
     ./open-macbook.nix
     ./claude.nix
     ./codex.nix
@@ -143,12 +154,10 @@ in
 
   programs.home-manager.enable = true;
 
-  home.sessionPath = [
-    "$HOME/.krew/bin"
-  ];
-
   home.sessionVariables = {
-    EDITOR = "herdr-notepad";
+    # herdr-notepad は herdr 越しに nvim を開くラッパなので、herdr を運用しない
+    # ホストでは素の nvim を指す。
+    EDITOR = if profiles.workstation.enable then "herdr-notepad" else "nvim";
     COLORTERM = "truecolor";
   };
 }

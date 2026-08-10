@@ -60,7 +60,7 @@ in
     );
   };
 
-  config = lib.mkIf (cfg != { }) {
+  config = lib.mkIf (config.aspulse.profiles.agents.enable && cfg != { }) {
     # Claude Code は MCP を settings.json では受け付けず、ユーザースコープの置き場は
     # ~/.claude.json しかない。Claude 自身が書き換える状態ファイルなので丸ごとは管理せず、
     # .mcpServers だけをマージする。

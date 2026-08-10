@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   tex = (
     pkgs.texlive.combine {
@@ -19,12 +24,15 @@ let
   );
 in
 {
-  home.packages = [
-    tex
-  ];
+  # texmf の配置も一緒に止める。TeX 本体が無いホストに置いても読む側がいない。
+  config = lib.mkIf config.aspulse.profiles.workstation.enable {
+    home.packages = [
+      tex
+    ];
 
-  home.file."texmf/tex/latex" = {
-    source = ../latex;
-    recursive = true;
+    home.file."texmf/tex/latex" = {
+      source = ../latex;
+      recursive = true;
+    };
   };
 }

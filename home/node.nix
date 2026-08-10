@@ -1,7 +1,15 @@
-{ pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    turbo
-    nodejs_24
-  ];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  home.packages = lib.optionals config.aspulse.profiles.workstation.enable (
+    with pkgs;
+    [
+      turbo
+      nodejs_24
+    ]
+  );
 }

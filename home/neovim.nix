@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   home.file.".config/nvim" = {
     source = ../neovim;
@@ -9,26 +14,29 @@
     recursive = false;
   };
 
-  home.packages = with pkgs; [
-    neovim
-    lua5_1
-    luarocks
-    clang
-    cmake
-    lua-language-server
-    editorconfig-checker
-    tree-sitter
-    tailwindcss-language-server
-    dockerfile-language-server
-    vscode-langservers-extracted
-    yaml-language-server
-    nixd
-    texlab
-    pyright
-    sshfs
-    tombi
-    kotlin-language-server
-    typescript-language-server
-    bash-language-server
-  ];
+  home.packages =
+    with pkgs;
+    [
+      neovim
+      lua5_1
+      luarocks
+      clang
+      cmake
+      lua-language-server
+      editorconfig-checker
+      tree-sitter
+      tailwindcss-language-server
+      dockerfile-language-server
+      vscode-langservers-extracted
+      yaml-language-server
+      nixd
+      texlab
+      pyright
+      tombi
+      kotlin-language-server
+      typescript-language-server
+      bash-language-server
+    ]
+    # sshfs は LSP でも Neovim の依存でもない。リモートマウントを張るホストにだけ入れる。
+    ++ lib.optionals config.aspulse.profiles.workstation.enable [ pkgs.sshfs ];
 }

@@ -50,33 +50,35 @@ let
   '';
 in
 {
-  # Codex custom skills were not detected when home-manager exposed them as symlinks.
-  # Place real files in ~/.codex/skills so Codex can discover them consistently.
-  home.activation.installCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    set -eu
+  config = lib.mkIf config.aspulse.profiles.agents.enable {
+    # Codex custom skills were not detected when home-manager exposed them as symlinks.
+    # Place real files in ~/.codex/skills so Codex can discover them consistently.
+    home.activation.installCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      set -eu
 
-    mkdir -p ${lib.escapeShellArg codexSkillsDir}
-    ${lib.concatStringsSep "\n" (map installSkill skillNames)}
-  '';
+      mkdir -p ${lib.escapeShellArg codexSkillsDir}
+      ${lib.concatStringsSep "\n" (map installSkill skillNames)}
+    '';
 
-  home.activation.installCodexExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    set -eu
+    home.activation.installCodexExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      set -eu
 
-    mkdir -p ${lib.escapeShellArg codexSkillsDir}
-    ${lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (name: files: installExternalSkill name files) externalSkills
-    )}
-  '';
+      mkdir -p ${lib.escapeShellArg codexSkillsDir}
+      ${lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (name: files: installExternalSkill name files) externalSkills
+      )}
+    '';
 
-  # Workaround for `codex remote-control`: the daemon currently insists on the
-  # installer-managed standalone path. Point that fixed path at the Home Manager
-  # profile binary while leaving a real installer-managed file untouched.
-  home.activation.linkCodexStandaloneBinary = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    set -eu
+    # Workaround for `codex remote-control`: the daemon currently insists on the
+    # installer-managed standalone path. Point that fixed path at the Home Manager
+    # profile binary while leaving a real installer-managed file untouched.
+    home.activation.linkCodexStandaloneBinary = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      set -eu
 
-    mkdir -p ${lib.escapeShellArg codexStandaloneDir}
-    if [ ! -e ${lib.escapeShellArg codexStandaloneBin} ] || [ -L ${lib.escapeShellArg codexStandaloneBin} ]; then
-      ln -sfn ${lib.escapeShellArg codexProfileBin} ${lib.escapeShellArg codexStandaloneBin}
-    fi
-  '';
+      mkdir -p ${lib.escapeShellArg codexStandaloneDir}
+      if [ ! -e ${lib.escapeShellArg codexStandaloneBin} ] || [ -L ${lib.escapeShellArg codexStandaloneBin} ]; then
+        ln -sfn ${lib.escapeShellArg codexProfileBin} ${lib.escapeShellArg codexStandaloneBin}
+      fi
+    '';
+  };
 }

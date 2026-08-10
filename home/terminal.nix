@@ -1,10 +1,12 @@
 {
+  config,
   lib,
   pkgs,
   herdr,
   ...
 }:
 let
+  profiles = config.aspulse.profiles;
   ghosttyPkg = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
   herdrPkg = herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
   herdr-notepad = pkgs.rustPlatform.buildRustPackage {
@@ -31,8 +33,12 @@ in
 
   home.packages = [
     ghosttyPkg
-    pkgs.zellij
     herdrPkg
+  ]
+  # zellij は herdr と役割が重なる予備の多重化。herdr-notepad は EDITOR 用ラッパで
+  # herdr のセッションがある前提なので、どちらもワークステーションでだけ入れる。
+  ++ lib.optionals profiles.workstation.enable [
+    pkgs.zellij
     herdr-notepad
   ];
 
@@ -40,14 +46,16 @@ in
 
   home.file.".config/ghostty/config".source = ../terminal/ghostty/config;
 
-  home.file.".config/zellij/config.kdl".text =
-    let
-      base = builtins.readFile ../terminal/zellij/config.kdl;
-    in
-    if pkgs.stdenv.isLinux then
-      builtins.replaceStrings [ "mouse_mode true" ] [ "mouse_mode false" ] base
-    else
-      base;
+  home.file.".config/zellij/config.kdl" = lib.mkIf profiles.workstation.enable {
+    text =
+      let
+        base = builtins.readFile ../terminal/zellij/config.kdl;
+      in
+      if pkgs.stdenv.isLinux then
+        builtins.replaceStrings [ "mouse_mode true" ] [ "mouse_mode false" ] base
+      else
+        base;
+  };
 
   home.file.".config/starship.toml".source = ../terminal/starship/starship.toml;
 

@@ -1,6 +1,14 @@
-{ pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    deno
-  ];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  home.packages = lib.optionals config.aspulse.profiles.workstation.enable (
+    with pkgs;
+    [
+      deno
+    ]
+  );
 }

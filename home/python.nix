@@ -1,7 +1,15 @@
-{ pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    python3
-    uv
-  ];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  home.packages = lib.optionals config.aspulse.profiles.workstation.enable (
+    with pkgs;
+    [
+      python3
+      uv
+    ]
+  );
 }

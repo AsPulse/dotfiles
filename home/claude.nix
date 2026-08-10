@@ -72,32 +72,35 @@ let
   '';
 in
 {
-  home.packages = [ claude-rate-limit-plot ];
-  home.file.".claude/statusline" = {
-    source = "${claude-statusline}/bin/claude-statusline";
-    executable = true;
-  };
-  # Claude skills were not detected reliably when home-manager exposed them as
-  # symlinks. Place real files in ~/.claude/skills so Claude Code can discover them.
-  # rm -rf each skill dir first to replace any previous home.file-managed symlinks.
-  home.activation.installClaudeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    set -eu
+  # statusline のビルドも skills の配布も、Claude Code を入れないホストでは丸ごと不要。
+  config = lib.mkIf config.aspulse.profiles.agents.enable {
+    home.packages = [ claude-rate-limit-plot ];
+    home.file.".claude/statusline" = {
+      source = "${claude-statusline}/bin/claude-statusline";
+      executable = true;
+    };
+    # Claude skills were not detected reliably when home-manager exposed them as
+    # symlinks. Place real files in ~/.claude/skills so Claude Code can discover them.
+    # rm -rf each skill dir first to replace any previous home.file-managed symlinks.
+    home.activation.installClaudeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      set -eu
 
-    mkdir -p ${lib.escapeShellArg claudeSkillsDir}
-    ${lib.concatStringsSep "\n" (map installClaudeSkill claudeSkillNames)}
-  '';
+      mkdir -p ${lib.escapeShellArg claudeSkillsDir}
+      ${lib.concatStringsSep "\n" (map installClaudeSkill claudeSkillNames)}
+    '';
 
-  home.activation.installClaudeExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    set -eu
+    home.activation.installClaudeExternalSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      set -eu
 
-    mkdir -p ${lib.escapeShellArg claudeSkillsDir}
-    ${lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (name: files: installExternalClaudeSkill name files) externalSkills
-    )}
-  '';
+      mkdir -p ${lib.escapeShellArg claudeSkillsDir}
+      ${lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (name: files: installExternalClaudeSkill name files) externalSkills
+      )}
+    '';
 
-  home.file.".claude/hooks/gh-pr-create-guard.sh" = {
-    source = ../claude/hooks/gh-pr-create-guard.sh;
-    executable = true;
+    home.file.".claude/hooks/gh-pr-create-guard.sh" = {
+      source = ../claude/hooks/gh-pr-create-guard.sh;
+      executable = true;
+    };
   };
 }

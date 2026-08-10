@@ -1,4 +1,6 @@
-{ ... }:
+{ config, lib, ... }:
 {
-  home.file.".config/opencode/tui.json".source = ../opencode/tui.json;
+  home.file.".config/opencode/tui.json" = lib.mkIf config.aspulse.profiles.agents.enable {
+    source = ../opencode/tui.json;
+  };
 }
