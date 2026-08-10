@@ -277,7 +277,8 @@ return {
       })
       vim.keymap.set('n', '<leader>rn', function() vim.api.nvim_command('Lspsaga rename') end, {})
       vim.keymap.set('n', '<leader>ac', function() vim.api.nvim_command('Lspsaga code_action') end, {})
-      vim.keymap.set('n', 'K', function() vim.api.nvim_command('Lspsaga hover_doc') end, {})
+      -- K は大西配列でバッファ移動に回したので、物理位置を保って N へ
+      vim.keymap.set('n', 'N', function() vim.api.nvim_command('Lspsaga hover_doc') end, {})
     end,
   },
   {
