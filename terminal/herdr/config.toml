@@ -1,13 +1,15 @@
+# キーは大西配列の「物理位置」で揃えている。QWERTY 時代の wasd / hjkl と
+# 同じキーを押せるよう、送られてくる文字 (leia / ktns) の方を書いている。
 [keys]
-previous_workspace = "alt+w"
-next_workspace = "alt+s"
+previous_workspace = "alt+l"
+next_workspace = "alt+i"
 
-previous_agent = "alt+a"
-next_agent = "alt+d"
+previous_agent = "alt+e"
+next_agent = "alt+a"
 
 switch_tab = ["prefix+1..9", "alt+1..9"]
 
-focus_pane_left = ["prefix+h", "alt+h"]
-focus_pane_down = ["prefix+j", "alt+j"]
-focus_pane_up = ["prefix+k", "alt+k"]
-focus_pane_right = ["prefix+l", "alt+l"]
+focus_pane_left = ["prefix+k", "alt+k"]
+focus_pane_down = ["prefix+t", "alt+t"]
+focus_pane_up = ["prefix+n", "alt+n"]
+focus_pane_right = ["prefix+s", "alt+s"]
