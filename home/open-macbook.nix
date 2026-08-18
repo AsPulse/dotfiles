@@ -1,6 +1,7 @@
 { pkgs, lib, ... }:
 let
-  scriptText =
+  substituteScript =
+    src:
     lib.replaceStrings
       [
         "@rsync@"
@@ -10,12 +11,16 @@ let
         "${pkgs.rsync}/bin/rsync"
         "${pkgs.openssh}/bin/ssh"
       ]
-      (builtins.readFile ../scripts/open-macbook.sh);
-  openMacbook = pkgs.writeShellScriptBin "OpenMacbook" scriptText;
+      (builtins.readFile src);
+  openMacbook = pkgs.writeShellScriptBin "OpenMacbook" (substituteScript ../scripts/open-macbook.sh);
+  returnMacbook = pkgs.writeShellScriptBin "ReturnMacbook" (
+    substituteScript ../scripts/return-macbook.sh
+  );
 in
 {
   home.packages = lib.optionals pkgs.stdenv.isLinux [
     openMacbook
+    returnMacbook
     pkgs.rsync
     pkgs.openssh
   ];
