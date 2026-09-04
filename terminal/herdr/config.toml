@@ -13,3 +13,10 @@ focus_pane_left = ["prefix+k", "alt+k"]
 focus_pane_down = ["prefix+t", "alt+t"]
 focus_pane_up = ["prefix+n", "alt+n"]
 focus_pane_right = ["prefix+s", "alt+s"]
+
+# navigate モード中の移動。既定は hjkl なので同じく物理位置へ寄せる
+# (このキーは修飾なしで書く必要がある)
+navigate_pane_left = "k"
+navigate_pane_down = "t"
+navigate_pane_up = "n"
+navigate_pane_right = "s"
