@@ -150,6 +150,7 @@ in
     ./mcp.nix
     ./mcp-context7.nix
     ./blender-cli.nix
+    ./blacksmith.nix
   ];
 
   programs.home-manager.enable = true;
