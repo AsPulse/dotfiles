@@ -3,6 +3,10 @@ font-feature = -dlig
 font-size = 12
 font-family = "JetBrainsMono Nerd Font"
 font-family = "FOT-TsukuOldGothic Std D"
+# font-style-bold は全ファミリー共通なので、JetBrainsMono と同じ ExtraBold を持つ和文フォントを太字に使う。
+# FOT-TsukuOldGothic の太いウェイトはスタイル名が B / E で一致しない。
+font-family-bold = "JetBrainsMono Nerd Font"
+font-family-bold = "Noto Sans JP"
 font-style-bold = "ExtraBold"
 
 
