@@ -30,6 +30,9 @@ in
   # activation が固まり、systemd の TimeoutStartSec に達して rebuild ごと失敗していた。
   config = lib.mkIf (servers != { }) {
     environment.etc."codex/config.toml".source = tomlFormat.generate "codex-config.toml" {
+      # Persist background OAuth refreshes before another session can reuse the old token.
+      # https://github.com/openai/codex/pull/42413
+      features.mcp_oauth_refresh_coordination = true;
       mcp_servers = lib.mapAttrs (_: toCodex) servers;
     };
   };
