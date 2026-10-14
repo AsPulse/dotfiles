@@ -97,10 +97,5 @@ in
         lib.mapAttrsToList (name: files: installExternalClaudeSkill name files) externalSkills
       )}
     '';
-
-    home.file.".claude/hooks/gh-pr-create-guard.sh" = {
-      source = ../claude/hooks/gh-pr-create-guard.sh;
-      executable = true;
-    };
   };
 }
