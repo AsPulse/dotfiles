@@ -12,7 +12,7 @@ public/
 ├── neovim/            # Full nvim config (see neovim/AGENTS.md)
 ├── desktop/
 │   ├── configuration.nix  # Cross-platform system config; conditionally imports darwin.nix / linux.nix
-│   ├── darwin.nix         # Darwin-only system options (Touch ID, startup chime, libiconv LIBRARY_PATH, xcbuild)
+│   ├── darwin.nix         # Darwin-only system options (Touch ID, startup chime, libiconv LIBRARY_PATH)
 │   └── linux.nix          # NixOS-only system options (docker, tailscale)
 ├── terminal/          # ghostty, starship, kubie raw config files
 ├── tsnip/             # Deno-based TypeScript snippet definitions for tsnip.nvim
