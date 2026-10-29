@@ -113,6 +113,11 @@ in
     ++ lib.optionals profiles.agents.enable [
       claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
       codexPackage
+      # llm-agents.nix の grok は cursor-agent と同名の `agent` も入れてしまうので、`grok` だけを公開する。
+      (pkgs.runCommand "grok" { } ''
+        mkdir -p $out/bin
+        ln -s ${llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.grok}/bin/grok $out/bin/grok
+      '')
       # opencode's Linux build is currently broken upstream (fixed-output hash
       # mismatch for node_modules). Disabled for now.
       # opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
