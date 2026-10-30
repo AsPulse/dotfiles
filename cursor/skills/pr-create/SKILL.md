@@ -1,6 +1,6 @@
 ---
 name: pr-create
-description: Create a pull request with an appropriate title, opening in browser
+description: Create a pull request with an appropriate title, opening in browser by default or creating it directly
 allowed-tools: Read, Grep, Glob
 argument-hint: "[base-branch]"
 ---
@@ -17,7 +17,11 @@ Create a pull request for the current branch by following these steps:
    - If unclear, run `gh issue list --state open --limit 20 --json number,title,body` and check whether any open issue matches the changes
    - Include the close reference in the PR body following the repo's exact convention
 5. Analyze the commits and diff to generate an appropriate, concise PR title and description that matches the repository's conventions
-6. Present the generated title and description to the user using AskUserQuestion with options to approve as-is or request changes. If the user requests changes, revise accordingly and confirm again.
+6. Present the generated title and description to the user using AskUserQuestion with these options. If the user requests changes, revise accordingly and confirm again.
+   - Approve and open in browser (Recommended): finish creating the PR in the browser
+   - Approve and create directly: create the PR without opening the browser
+   - Request changes
 7. Run: `gh pr create --title "<generated title>" --body "<generated description>" --web` (if `$ARGUMENTS` was provided, also pass `--base $ARGUMENTS`)
+   - If the user chose to create directly, omit `--web` and report the created PR URL
 
 Keep the title short and descriptive, following the style of existing PRs in the repository.
