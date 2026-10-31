@@ -14,7 +14,10 @@ in
     ./codex-mcp.nix
   ]
   ++ lib.optionals pkgs.stdenv.isDarwin [ ./darwin.nix ]
-  ++ lib.optionals pkgs.stdenv.isLinux [ ./linux.nix ];
+  ++ lib.optionals pkgs.stdenv.isLinux [
+    ./linux.nix
+    ./t3code.nix
+  ];
 
   environment.systemPackages =
     (with pkgs; [

@@ -163,6 +163,7 @@ in
     ./mcp-context7.nix
     ./blender-cli.nix
     ./blacksmith.nix
+    ./t3code.nix
   ];
 
   programs.home-manager.enable = true;
