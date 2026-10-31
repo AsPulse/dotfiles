@@ -107,4 +107,4 @@ AI エージェントへ渡すプロンプトを `~/snippets` から呼び出す
 
 ## LSP SERVERS CONFIGURED
 
-texlab, ts_ls, eslint, biome, denols, tailwindcss, dockerls, lua_ls, jsonls, yamlls, tombi, bashls, nixd, pyright, rust-analyzer (via rustaceanvim)
+texlab, ts_ls, eslint, biome, denols, tailwindcss, dockerls, lua_ls, jsonls, yamlls, tombi, bashls, nixd, pyright, rust-analyzer (via rustaceanvim), leanls (via lean.nvim, toolchain from elan)

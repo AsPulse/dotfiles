@@ -36,6 +36,8 @@
       kotlin-language-server
       typescript-language-server
       bash-language-server
+      # Lean の LSP はツールチェーン同梱なので、プロジェクトごとの版を elan に解決させる。
+      elan
     ]
     # sshfs は LSP でも Neovim の依存でもない。リモートマウントを張るホストにだけ入れる。
     ++ lib.optionals config.aspulse.profiles.workstation.enable [ pkgs.sshfs ];

@@ -27,6 +27,7 @@ Each file returns a lazy.nvim plugin spec. Auto-loaded by `required.under('plugi
 | `copilot.lua` | copilot.lua | InsertEnter |
 | `integration.lua` | External tool integrations | — |
 | `lexima.lua` | Auto-pairs | InsertEnter |
+| `lean.lua` | lean.nvim | BufReadPre/BufNewFile *.lean |
 | `lsp.lua` | lspconfig (fork) + lspsaga + dressing + lsp-colors + inlay-hints | BufEnter/LspAttach |
 | `lualine.lua` | Status line | — |
 | `motion.lua` | Motion plugins | — |
