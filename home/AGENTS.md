@@ -16,7 +16,7 @@ One `.nix` file per tool/domain. Each is imported by `home.nix`.
 | `terminal.nix` | Shell + terminal | zsh config, aliases (`cat`→`bat`, `ls`→`eza`), completions, ghostty/starship/zellij |
 | `git.nix` | Git + GitHub | git settings, delta pager, gh CLI + extensions, GPG signing, lazygit placement |
 | `neovim.nix` | Editor | Places `../neovim` → `~/.config/nvim` and `../tsnip` → `~/.vim/tsnip` |
-| `node.nix` | Node.js | nodejs + pnpm |
+| `node.nix` | Node.js | nodejs + turbo, `~/.npmrc` pointing at Takumi Guard |
 | `python.nix` | Python | python3 + uv |
 | `deno.nix` | Deno | deno runtime |
 | `rust.nix` | Rust | rustup |

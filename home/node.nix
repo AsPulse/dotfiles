@@ -12,4 +12,11 @@
       nodejs_24
     ]
   );
+
+  # devShell の pnpm も ~/.npmrc を読むので、nodejs を入れないホストにも置く。
+  programs.npm = {
+    enable = true;
+    package = null;
+    settings.registry = "https://npm.flatt.tech/";
+  };
 }
