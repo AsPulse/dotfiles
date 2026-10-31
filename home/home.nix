@@ -8,6 +8,7 @@
   tellur,
   nix-index-database,
   llm-agents,
+  kache,
   ...
 }:
 let
@@ -77,7 +78,12 @@ in
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
   _module.args = {
-    inherit herdr tellur llm-agents;
+    inherit
+      herdr
+      tellur
+      llm-agents
+      kache
+      ;
   };
 
   home.packages =

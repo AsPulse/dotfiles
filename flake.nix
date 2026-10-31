@@ -16,6 +16,7 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    kache.url = "github:kunobi-ninja/kache/v1.0.0";
   };
 
   outputs =
@@ -32,6 +33,7 @@
       tellur,
       nix-index-database,
       llm-agents,
+      kache,
       ...
     }:
     let
@@ -123,6 +125,7 @@
                 tellur
                 nix-index-database
                 llm-agents
+                kache
                 ;
             }
           );
