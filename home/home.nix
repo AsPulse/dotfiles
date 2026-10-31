@@ -114,6 +114,7 @@ in
         subversion
         ngrok
         cloudflared
+        _1password-cli
       ]
     )
     ++ lib.optionals profiles.agents.enable [
