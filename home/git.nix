@@ -28,6 +28,7 @@
       gh-markdown-preview
       gh-dash
       gh-poi
+      gh-stack
     ];
 
     settings = {
