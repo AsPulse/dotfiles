@@ -7,7 +7,7 @@
 }:
 let
   profiles = config.aspulse.profiles;
-  ghosttyPkg = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+  ghosttyPkg = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
   herdrPkg = herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
   herdr-notepad = pkgs.rustPlatform.buildRustPackage {
     pname = "herdr-notepad";
@@ -51,7 +51,7 @@ in
       let
         base = builtins.readFile ../terminal/zellij/config.kdl;
       in
-      if pkgs.stdenv.isLinux then
+      if pkgs.stdenv.hostPlatform.isLinux then
         builtins.replaceStrings [ "mouse_mode true" ] [ "mouse_mode false" ] base
       else
         base;

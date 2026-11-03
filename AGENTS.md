@@ -36,7 +36,7 @@ public/
 | Add a nixos-only system option | `desktop/linux.nix` |
 | Add a home-manager module | `home/<tool>.nix` + add to `home/home.nix` `imports` |
 | Add a Cursor skill | `cursor/skills/<name>/SKILL.md` + add name to `home/cursor.nix` `cursorSkillNames` |
-| Add a user package | `home/home.nix` `home.packages` (wrap darwin-only ones in `lib.optionals pkgs.stdenv.isDarwin [...]`) |
+| Add a user package | `home/home.nix` `home.packages` (wrap darwin-only ones in `lib.optionals pkgs.stdenv.hostPlatform.isDarwin [...]`) |
 | Place a config file | Relevant `home/*.nix` using `home.file."<path>".source` |
 | Edit CI | `.github/workflows/format.yaml` |
 

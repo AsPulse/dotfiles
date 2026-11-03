@@ -6,7 +6,7 @@
 let
   lemonadeServerHost = "aspulses-macbook-air";
   lemonadeServerAllow = "127.0.0.1,::1,100.125.219.92,fd7a:115c:a1e0::b83b:db5c";
-  lemonadeClientHost = if pkgs.stdenv.isLinux then lemonadeServerHost else "localhost";
+  lemonadeClientHost = if pkgs.stdenv.hostPlatform.isLinux then lemonadeServerHost else "localhost";
 
   # `xdg-open` / `gh` などが BROWSER の値を空白で split して先頭をコマンドとして
   # 扱うケースがあるため、引数込みの単一バイナリとしてラップする。
@@ -21,7 +21,7 @@ in
   home.packages = [
     pkgs.lemonade
   ]
-  ++ lib.optionals pkgs.stdenv.isLinux [ lemonade-open ];
+  ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ lemonade-open ];
 
   # server / client 両方が同じ toml を読む。Linux client は Tailscale MagicDNS で
   # Mac に直接接続し、Mac client は従来どおり localhost を使う。
@@ -33,7 +33,7 @@ in
 
   # macOS: SSH 越しに飛んできた URL を GUI セッションで開けるよう、user agent
   # として常駐させる。
-  launchd.agents.lemonade = lib.mkIf pkgs.stdenv.isDarwin {
+  launchd.agents.lemonade = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     enable = true;
     config = {
       ProgramArguments = [
@@ -49,7 +49,7 @@ in
   };
 
   # NixOS: BROWSER を経由してくる URL は全部 Tailscale 越しに Mac に投げる。
-  home.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
+  home.sessionVariables = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     BROWSER = "lemonade-open";
   };
 }

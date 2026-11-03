@@ -129,7 +129,7 @@ in
       # mismatch for node_modules). Disabled for now.
       # opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
     ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       pkgs.skimpdf
     ];
 

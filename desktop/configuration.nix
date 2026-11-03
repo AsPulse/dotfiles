@@ -13,8 +13,8 @@ in
   imports = [
     ./codex-mcp.nix
   ]
-  ++ lib.optionals pkgs.stdenv.isDarwin [ ./darwin.nix ]
-  ++ lib.optionals pkgs.stdenv.isLinux [
+  ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ ./darwin.nix ]
+  ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     ./linux.nix
     ./t3code.nix
   ];

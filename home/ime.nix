@@ -11,7 +11,7 @@ in
 {
   # macSKKがnix storeにある設定ファイルを読もうとしてもTCCでブロックされてしまうため、
   # 直接配置する。
-  home.activation.configureMacSkk = lib.mkIf pkgs.stdenv.isDarwin (
+  home.activation.configureMacSkk = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       set -eu
 

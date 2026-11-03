@@ -30,7 +30,7 @@ One `.nix` file per tool/domain. Each is imported by `home.nix`.
 
 ## CONVENTIONS
 
-- Platform conditionals: `lib.mkIf pkgs.stdenv.isDarwin` / `.isLinux`
+- Platform conditionals: `lib.mkIf pkgs.stdenv.hostPlatform.isDarwin` / `.isLinux`
 - Config file placement: `home.file."<dest>".source = <src>` — never manual symlinks
 - macOS vs Linux config paths differ (e.g., lazygit: `Library/Application Support/` vs `.config/`)
 - Packages from flake inputs use `<input>.packages.${pkgs.stdenv.hostPlatform.system}.default`

@@ -77,7 +77,7 @@ let
 in
 {
   # Blender を動かすのは NixOS マシンだけなので、Darwin に closure を引き込まない。
-  config = lib.mkIf pkgs.stdenv.isLinux {
+  config = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     home.packages = [ blender-cli ];
   };
 }

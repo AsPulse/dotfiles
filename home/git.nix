@@ -43,7 +43,7 @@
   # macOS は Touch ID で署名 (pinentry-touchid は public flake ローカルのためここに置く)。
   # Linux 側の gpg 運用設定 (キャッシュ・pinentry・開錠ヘルパ) はマシン固有なので
   # private/home/gpg.nix に置く。
-  home.file.".gnupg/gpg-agent.conf" = lib.mkIf pkgs.stdenv.isDarwin {
+  home.file.".gnupg/gpg-agent.conf" = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     text = ''
       pinentry-program ${(pkgs.callPackage ./pinentry-touchid { }).outPath}/bin/pinentry-touchid
     '';
@@ -51,13 +51,15 @@
 
   # lazygit
 
-  home.file.".config/lazygit/config.yml" = lib.mkIf pkgs.stdenv.isLinux {
+  home.file.".config/lazygit/config.yml" = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     source = ../lazygit/config.yml;
   };
 
-  home.file."Library/Application Support/lazygit/config.yml" = lib.mkIf pkgs.stdenv.isDarwin {
-    source = ../lazygit/config.yml;
-  };
+  home.file."Library/Application Support/lazygit/config.yml" =
+    lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
+      {
+        source = ../lazygit/config.yml;
+      };
 
   home.packages =
     (with pkgs; [
@@ -65,11 +67,11 @@
       difftastic
       delta
     ])
-    ++ lib.optionals pkgs.stdenv.isDarwin [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       pkgs.pinentry_mac
       (pkgs.callPackage ./pinentry-touchid { })
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.pinentry-curses
     ];
 }

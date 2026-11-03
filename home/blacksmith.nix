@@ -62,7 +62,7 @@ in
 {
   # 使うのは CI キャッシュとジョブの調査、testbox へのローカル差分同期で、
   # どれも実際にビルドを回すホストの作業。
-  config = lib.mkIf (config.aspulse.profiles.workstation.enable && pkgs.stdenv.isLinux) {
+  config = lib.mkIf (config.aspulse.profiles.workstation.enable && pkgs.stdenv.hostPlatform.isLinux) {
     home.packages = [ blacksmith ];
   };
 }

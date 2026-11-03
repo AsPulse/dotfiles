@@ -74,7 +74,7 @@ in
     # home.sessionPath は PATH の先頭に追加するため、自己アップデータを持つツールが
     # ~/.local/bin に書き戻した汎用 Linux 向けバイナリが Nix 版を隠してしまう。
     # そこで sessionPath ではなく末尾へ追加して Nix 側を常に優先させる。
-    home.sessionVariablesExtra = lib.optionalString pkgs.stdenv.isLinux ''
+    home.sessionVariablesExtra = lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
       export PATH="''${PATH:+''${PATH}:}$HOME/.local/bin"
     '';
 

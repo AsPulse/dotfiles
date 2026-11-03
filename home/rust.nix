@@ -65,7 +65,7 @@ in
 
   # kache はデーモンなしでも動くが、ストアの GC と消えた worktree の target 掃除はデーモンが担う。
   # サービス名は kache daemon install が作るものに合わせ、kache daemon start/restart から扱えるようにする。
-  systemd.user.services.kache = lib.mkIf (workstation && pkgs.stdenv.isLinux) {
+  systemd.user.services.kache = lib.mkIf (workstation && pkgs.stdenv.hostPlatform.isLinux) {
     Unit.Description = "kache build cache daemon";
     Service = {
       ExecStart = "${kacheExe} daemon run";
@@ -76,7 +76,7 @@ in
     Install.WantedBy = [ "default.target" ];
   };
 
-  launchd.agents.kache = lib.mkIf (workstation && pkgs.stdenv.isDarwin) {
+  launchd.agents.kache = lib.mkIf (workstation && pkgs.stdenv.hostPlatform.isDarwin) {
     enable = true;
     config = {
       Label = "ninja.kunobi.kache";

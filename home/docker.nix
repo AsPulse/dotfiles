@@ -10,7 +10,7 @@
       docker
       docker-compose
     ])
-    ++ lib.optionals pkgs.stdenv.isDarwin [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       pkgs.colima
     ]
   );
