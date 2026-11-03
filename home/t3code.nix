@@ -11,11 +11,11 @@ let
   # tarball (Node SEA + ネイティブモジュール) を NixOS 向けに patchelf して使う。
   t3code = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "t3code";
-    version = "0.1.3";
+    version = "0.1.6";
 
     src = pkgs.fetchurl {
       url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-      hash = "sha256-Y80PBUfu9iu07OJ/p3m7+eK6hTHMaFQlaLqeeIONxoQ=";
+      hash = "sha256-fPMdqQ3uQfUk3VtnnrttQEY3yl2dxv2LwBlRHVe7d+Y=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
