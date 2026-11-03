@@ -23,10 +23,11 @@ gui:
       - '#cdd6f4'
     searchingActiveBorderColor:
       - '#f9e2af'
-  authorColors:
-    '*': '#b4befe'
+    authorColors:
+      '*': '#b4befe'
 
 git:
-  pagers:
-    - pager: delta --paging=never
-    - externalDiffCommand: difft --color=always
+  diffRenderers:
+    - command: delta --paging=never
+    - type: extDiff
+      command: difft --color=always
