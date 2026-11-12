@@ -20,6 +20,8 @@ Run `git log -10 --format="----%n%B"` to retrieve recent commit messages (includ
 
 If 10 commits are not enough to determine the conventions clearly, fetch more with a larger limit.
 
+If there is no usable convention (a new repository with few or no commits, or history too inconsistent to tell), use Conventional Commits. Add a scope whenever the change has a natural one.
+
 ## Step 2: Understand current changes
 
 Run `git status` (without -uall flag) and `git diff` (both staged and unstaged) to understand what has changed.

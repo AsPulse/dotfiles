@@ -12,6 +12,7 @@ Create a pull request for the current branch by following these steps:
 3. Check the repository's existing PR title and description style by running these in parallel:
    - `gh pr list --state merged --limit 10 --json number,title,body` for the repository's overall conventions
    - `gh pr list --state merged --author @me --limit 5 --json number,title,body` for your own recent PRs
+   - If there are no merged PRs to learn from, or they show no clear convention, use a Conventional Commits-style title (`type(scope): description`) and a very short body: two or three lines of plain text, with no headings or sections.
 4. If past PRs follow an issue-closing convention (e.g. `- close #N`, `closes #N`, `fixes #N`), find any issue this PR should close:
    - Look through the conversation history for issue numbers that were referenced or implied during the work
    - If unclear, run `gh issue list --state open --limit 20 --json number,title,body` and check whether any open issue matches the changes

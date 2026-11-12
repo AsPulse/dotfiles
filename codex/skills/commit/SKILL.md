@@ -16,6 +16,7 @@ Create a commit for the current changes while matching the repository's conventi
    - whether Conventional Commits are used
    - common types and scopes
    - capitalization and body style
+   If there is no usable convention (a new repository with few or no commits, or history too inconsistent to tell), use Conventional Commits. Add a scope whenever the change has a natural one.
 2. Inspect the current changes with `git status` and relevant diffs. Review staged and unstaged changes separately.
 3. If the user gave extra instructions, follow them. For example:
    - commit only certain files
