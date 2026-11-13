@@ -17,9 +17,11 @@ let
   daemonPath = lib.makeBinPath [ pkgs.git ];
 in
 {
-  # rustup だけは常に入れる。ツールチェインの取得と rustfmt/clippy はどのホストでも要る。
+  # rustup と kache は常に入れる。ツールチェインの取得と rustfmt/clippy はどのホストでも要り、
+  # cargo を使うならキャッシュも効かせたい。
   home.packages = [
     pkgs.rustup
+    kachePkg
   ]
   ++ lib.optionals workstation (
     with pkgs;
@@ -31,15 +33,13 @@ in
       cargo-expand
       cargo-cross
       cargo-release
-      kachePkg
     ]
   );
 
   # rustc-wrapper に指定した実行ファイルが PATH に無いと cargo は起動直後に落ちる。
-  # kache を入れないホストにこの設定を配ってはいけない。
   # [env] は kache init が書き込む内容と同じ。nix develop の中では devshell の cc が
   # PATH の先頭に来て shims を素通りするため、cc crate が CC より優先する HOST_CC で kache を挟む。
-  home.file.".cargo/config.toml" = lib.mkIf workstation {
+  home.file.".cargo/config.toml" = {
     text = ''
       [build]
       rustc-wrapper = "kache"
@@ -52,7 +52,7 @@ in
   };
 
   # workspace の bin やテスト実行ファイルは編集のたびに中身が変わり、ほぼ再利用されないのにストアの大半を占める。
-  xdg.configFile."kache/config.toml" = lib.mkIf workstation {
+  xdg.configFile."kache/config.toml" = {
     text = ''
       [cache]
       cache_executables = false
@@ -61,11 +61,11 @@ in
   };
 
   # cc や gcc を PATH から呼ぶ C/C++ ビルドを kache 経由にする。shims は本物のコンパイラより前に置く必要がある。
-  home.sessionPath = lib.mkIf workstation [ "${kachePkg}/shims" ];
+  home.sessionPath = [ "${kachePkg}/shims" ];
 
   # kache はデーモンなしでも動くが、ストアの GC と消えた worktree の target 掃除はデーモンが担う。
   # サービス名は kache daemon install が作るものに合わせ、kache daemon start/restart から扱えるようにする。
-  systemd.user.services.kache = lib.mkIf (workstation && pkgs.stdenv.hostPlatform.isLinux) {
+  systemd.user.services.kache = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     Unit.Description = "kache build cache daemon";
     Service = {
       ExecStart = "${kacheExe} daemon run";
@@ -76,7 +76,7 @@ in
     Install.WantedBy = [ "default.target" ];
   };
 
-  launchd.agents.kache = lib.mkIf (workstation && pkgs.stdenv.hostPlatform.isDarwin) {
+  launchd.agents.kache = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     enable = true;
     config = {
       Label = "ninja.kunobi.kache";
