@@ -3,6 +3,7 @@
   lib,
   herdr,
   tellur,
+  security-audit-skill,
   ...
 }:
 let
@@ -48,6 +49,15 @@ let
       '') files
     )}
   '';
+  # SKILL.md から同じディレクトリの参考資料やバリデータを参照するので、ディレクトリごと置く。
+  externalSkillDirs = {
+    "security-audit" = "${security-audit-skill}/skills/security-audit";
+  };
+  installExternalSkillDir = name: src: ''
+    rm -rf ${lib.escapeShellArg "${codexSkillsDir}/${name}"}
+    cp -r --no-preserve=mode ${lib.escapeShellArg (toString src)} \
+      ${lib.escapeShellArg "${codexSkillsDir}/${name}"}
+  '';
 in
 {
   config = lib.mkIf config.aspulse.profiles.agents.enable {
@@ -67,6 +77,7 @@ in
       ${lib.concatStringsSep "\n" (
         lib.mapAttrsToList (name: files: installExternalSkill name files) externalSkills
       )}
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList installExternalSkillDir externalSkillDirs)}
     '';
 
     # Workaround for `codex remote-control`: the daemon currently insists on the

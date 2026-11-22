@@ -6,6 +6,7 @@
   claude-code-nix,
   herdr,
   tellur,
+  security-audit-skill,
   nix-index-database,
   llm-agents,
   kache,
@@ -81,6 +82,7 @@ in
     inherit
       herdr
       tellur
+      security-audit-skill
       llm-agents
       kache
       ;

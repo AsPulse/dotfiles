@@ -13,6 +13,8 @@
     # skills/tellur-authoring を取り込むためだけの入力なので flake としては評価しない。
     tellur.url = "github:comnipl/tellur";
     tellur.flake = false;
+    security-audit-skill.url = "github:cloudflare/security-audit-skill";
+    security-audit-skill.flake = false;
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-module";
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -31,6 +33,7 @@
       opencode,
       herdr,
       tellur,
+      security-audit-skill,
       nix-index-database,
       llm-agents,
       kache,
@@ -123,6 +126,7 @@
                 claude-code-nix
                 herdr
                 tellur
+                security-audit-skill
                 nix-index-database
                 llm-agents
                 kache

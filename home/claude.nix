@@ -4,6 +4,7 @@
   pkgs,
   herdr,
   tellur,
+  security-audit-skill,
   ...
 }:
 let
@@ -42,6 +43,15 @@ let
           ${lib.escapeShellArg "${claudeSkillsDir}/${name}/${file}"}
       '') files
     )}
+  '';
+  # SKILL.md から同じディレクトリの参考資料やバリデータを参照するので、ディレクトリごと置く。
+  externalSkillDirs = {
+    "security-audit" = "${security-audit-skill}/skills/security-audit";
+  };
+  installExternalClaudeSkillDir = name: src: ''
+    rm -rf ${lib.escapeShellArg "${claudeSkillsDir}/${name}"}
+    cp -r --no-preserve=mode ${lib.escapeShellArg (toString src)} \
+      ${lib.escapeShellArg "${claudeSkillsDir}/${name}"}
   '';
   # フィルタ後の内容でコンテンツアドレスされた src にすることで、
   # リポジトリ内の無関係な変更による再ビルドを防ぐ
@@ -96,6 +106,7 @@ in
       ${lib.concatStringsSep "\n" (
         lib.mapAttrsToList (name: files: installExternalClaudeSkill name files) externalSkills
       )}
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList installExternalClaudeSkillDir externalSkillDirs)}
     '';
   };
 }
