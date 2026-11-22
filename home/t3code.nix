@@ -37,8 +37,31 @@ let
       runHook postInstall
     '';
 
+    # T3 は preview 用ブラウザを本体に埋め込んだバージョン名のディレクトリから探す。previewBrowserVersion と
+    # 食い違ったまま T3 を上げると、置いたブラウザが使われず汎用 Linux 向けのものを落としてしまう。
+    postInstall = ''
+      grep -aqF 'VERSION = "${previewBrowserVersion}"' $out/libexec/t3code/t3 \
+        || { echo "T3 expects a different chrome-headless-shell than ${previewBrowserVersion}; update previewBrowserVersion" >&2; exit 1; }
+    '';
+
     meta.platforms = [ "x86_64-linux" ];
   });
+
+  previewBrowserVersion = "157.0.8103.38";
+
+  # T3 は preview 用に chrome-headless-shell を ~/.t3/tools へ落として使うが、Google のログインは
+  # headless-shell を弾く。T3 が探す場所に普通の Chrome を置き、Chrome 本体の headless で動かす。
+  # 窓ありにはできない。T3 は起動直後に最初のタブをすべて閉じ、窓ありの Chrome は最後の窓が
+  # 閉じた時点で終了してしまう。
+  previewBrowser = pkgs.writeTextFile {
+    name = "t3code-preview-browser";
+    destination = "/chrome-headless-shell";
+    executable = true;
+    text = ''
+      #!${pkgs.runtimeShell}
+      exec ${lib.getExe pkgs.google-chrome} "$@"
+    '';
+  };
 in
 {
   options.aspulse.t3code = {
@@ -56,6 +79,9 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [ t3code ];
+
+    home.file.".t3/tools/chrome-headless-shell/linux64/${previewBrowserVersion}".source =
+      previewBrowser;
 
     # 公式の `t3 service install` は自前で unit を書き、`t3 update` で自身を差し替えるため使わない。
     systemd.user.services.t3code = {
