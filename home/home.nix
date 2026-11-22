@@ -127,9 +127,7 @@ in
         mkdir -p $out/bin
         ln -s ${llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.grok}/bin/grok $out/bin/grok
       '')
-      # opencode's Linux build is currently broken upstream (fixed-output hash
-      # mismatch for node_modules). Disabled for now.
-      # opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
+      opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
     ]
     ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       pkgs.skimpdf
