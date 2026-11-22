@@ -85,7 +85,12 @@ in
 
     # 公式の `t3 service install` は自前で unit を書き、`t3 update` で自身を差し替えるため使わない。
     systemd.user.services.t3code = {
-      Unit.Description = "T3 Code server";
+      Unit = {
+        Description = "T3 Code server";
+        # 再起動すると配下で動いているエージェントがすべて止まるため、switch では差し替えだけにして
+        # 再起動は手動で行う。
+        X-RestartIfChanged = false;
+      };
       Service = {
         WorkingDirectory = config.home.homeDirectory;
         Environment = [
