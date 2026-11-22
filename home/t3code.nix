@@ -11,15 +11,20 @@ let
   # tarball (Node SEA + ネイティブモジュール) を NixOS 向けに patchelf して使う。
   t3code = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "t3code";
-    version = "0.1.6";
+    version = "0.1.8";
 
     src = pkgs.fetchurl {
       url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-      hash = "sha256-fPMdqQ3uQfUk3VtnnrttQEY3yl2dxv2LwBlRHVe7d+Y=";
+      hash = "sha256-ucSdwAwj+7xZYb2v8tiOVW2WyNvWOMRQHik3xwZQqeU=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    buildInputs = [
+      pkgs.stdenv.cc.cc.lib
+      pkgs.vulkan-loader
+    ];
+    # musl 向けのネイティブモジュールも同梱されているが、glibc 環境では読み込まれない。
+    autoPatchelfIgnoreMissingDeps = [ "libc.musl-x86_64.so.1" ];
 
     # strip は SEA に埋め込まれたアプリ本体を壊す。
     dontStrip = true;
