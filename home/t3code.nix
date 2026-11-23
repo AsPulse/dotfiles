@@ -7,15 +7,16 @@
 let
   cfg = config.aspulse.t3code;
 
-  # nixpkgs の t3code はソースビルドで upstream に大きく遅れているため、公式の release
-  # tarball (Node SEA + ネイティブモジュール) を NixOS 向けに patchelf して使う。
+  # nixpkgs の t3code はソースビルドで upstream に大きく遅れているため、release tarball
+  # (Node SEA + ネイティブモジュール) を NixOS 向けに patchelf して使う。独自パッチを当てた
+  # fork (AsPulse/t3code) の release を使う。形式は upstream の公式 release と同じ。
   t3code = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "t3code";
-    version = "0.1.8";
+    version = "0.1.11";
 
     src = pkgs.fetchurl {
-      url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-      hash = "sha256-ucSdwAwj+7xZYb2v8tiOVW2WyNvWOMRQHik3xwZQqeU=";
+      url = "https://github.com/AsPulse/t3code/releases/download/aspulse-v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
+      hash = "sha256-1NRsOrRs5YBl7YvX+fW5dQqaOUKuupkCSJztT1JshE4=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
@@ -47,7 +48,7 @@ let
     meta.platforms = [ "x86_64-linux" ];
   });
 
-  previewBrowserVersion = "157.0.8103.38";
+  previewBrowserVersion = "157.0.8103.78";
 
   # T3 は preview 用に chrome-headless-shell を ~/.t3/tools へ落として使うが、Google のログインは
   # headless-shell を弾く。T3 が探す場所に普通の Chrome を置き、Chrome 本体の headless で動かす。
