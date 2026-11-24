@@ -14,9 +14,10 @@ let
     pname = "t3code";
     version = "0.1.11";
 
+    # fork は同じ upstream 版でパッチを変えて作り直すとタグ末尾に -N を付ける。
     src = pkgs.fetchurl {
-      url = "https://github.com/AsPulse/t3code/releases/download/aspulse-v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-      hash = "sha256-1NRsOrRs5YBl7YvX+fW5dQqaOUKuupkCSJztT1JshE4=";
+      url = "https://github.com/AsPulse/t3code/releases/download/aspulse-v${finalAttrs.version}-2/t3-${finalAttrs.version}-linux-x64.tar.gz";
+      hash = "sha256-V3oLUThPFeVSAwIiTiXBal0d2Adl1da1mjPPFYtBMa8=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
@@ -97,6 +98,9 @@ in
         Environment = [
           # user unit にはログインシェルの PATH が無く、エージェント CLI (claude, codex) や git を見つけられない。
           "PATH=/etc/profiles/per-user/${config.home.username}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin:/run/wrappers/bin"
+          # 前者は PostHog への製品分析と relay tracing、後者は OTLP の送信を止める。
+          "T3CODE_TELEMETRY_ENABLED=false"
+          "T3CODE_OTEL_SDK_DISABLED=true"
         ];
         ExecStart = "${t3code}/bin/t3 serve --host 127.0.0.1 --port ${toString cfg.port} --no-browser";
         KillMode = "mixed";
