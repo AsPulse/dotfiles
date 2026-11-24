@@ -8,7 +8,8 @@
     claude-code-nix.url = "github:sadjow/claude-code-nix";
     lazygit.url = "github:jesseduffield/lazygit";
     flake-utils.url = "github:numtide/flake-utils";
-    opencode.url = "github:anomalyco/opencode";
+    # dev ブランチは Linux で node_modules の固定ハッシュがずれて壊れていることが多い。ビルドが通るリリースタグに固定する。
+    opencode.url = "github:anomalyco/opencode/v2.4.1";
     herdr.url = "github:ogulcancelik/herdr/v0.7.3";
     # skills/tellur-authoring を取り込むためだけの入力なので flake としては評価しない。
     tellur.url = "github:comnipl/tellur";
