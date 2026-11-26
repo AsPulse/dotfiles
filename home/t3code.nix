@@ -16,8 +16,8 @@ let
 
     # fork は同じ upstream 版でパッチを変えて作り直すとタグ末尾に -N を付ける。
     src = pkgs.fetchurl {
-      url = "https://github.com/AsPulse/t3code/releases/download/aspulse-v${finalAttrs.version}-2/t3-${finalAttrs.version}-linux-x64.tar.gz";
-      hash = "sha256-V3oLUThPFeVSAwIiTiXBal0d2Adl1da1mjPPFYtBMa8=";
+      url = "https://github.com/AsPulse/t3code/releases/download/aspulse-v${finalAttrs.version}-7/t3-${finalAttrs.version}-linux-x64.tar.gz";
+      hash = "sha256-4Gm6OIIVGw30jHoK4wa8vVDo0IJPyZs6d5Yo55w0kCk=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
