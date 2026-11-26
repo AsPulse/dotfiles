@@ -31,7 +31,9 @@ let
   # Antigravity は HTTP サーバーの URL を url ではなく serverUrl で受け取る。
   toAntigravity =
     server:
-    if server.type == "http" then
+    if server.antigravityConfig != null then
+      server.antigravityConfig
+    else if server.type == "http" then
       { serverUrl = server.url; }
     else
       { inherit (server) command; } // lib.optionalAttrs (server.args != [ ]) { inherit (server) args; };
@@ -94,8 +96,19 @@ in
             type = lib.types.bool;
             default = true;
             description = ''
-              Antigravity にも配るか。Antigravity は OAuth トークンをサーバー名ではなく URL ごとに
-              1 つしか持てないので、同じ URL を別アカウントで使い分けるサーバーは 1 つに絞る必要がある。
+              Antigravity にも配るか。Antigravity は OAuth トークンをサーバー名ではなく
+              resource（正規化した URL）ごとに 1 つしか持てないので、同じ URL を別アカウントで
+              使い分けるサーバーは 1 つに絞るか、antigravityConfig で中継に差し替える必要がある。
+            '';
+          };
+          antigravityConfig = lib.mkOption {
+            type = lib.types.nullOr (lib.types.attrsOf lib.types.anything);
+            default = null;
+            description = ''
+              Antigravity の mcp_config.json にこのサーバーとして書く設定。指定すると type などからの
+              変換を使わずこれをそのまま書く。Antigravity はトークンを resource ごとに 1 つしか持てず、
+              URL を変えても resource の検証に通らないため、同じサーバーを別アカウントで使うときは
+              mcp-remote のようにトークンを自前で持つ stdio の中継に差し替える。
             '';
           };
         };
